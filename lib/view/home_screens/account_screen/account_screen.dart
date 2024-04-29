@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wizmo/res/app_urls/app_urls.dart';
+import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/exception/error_widget.dart';
+import 'package:wizmo/utils/flushbar.dart';
+import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/account_screen/account_screen_provider.dart';
 import 'package:wizmo/view/home_screens/account_screen/empty.dart';
+import 'package:wizmo/view/login_signup/login/login.dart';
 
 class AccountScreen extends StatefulWidget {
   final AccountScreenProvider provider;
@@ -16,8 +22,18 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   AccountScreenProvider get provider => widget.provider;
+  late bool _isLogIn;
+  checkAuth() async {
+    _isLogIn = await Authentication().getAuth();
+  }
+
+  getProfile() async {
+    return await FirebaseFirestore.instance.collection('users').get();
+  }
+
   @override
   void initState() {
+    checkAuth();
     print('In the Account Screen');
     super.initState();
   }
@@ -29,9 +45,10 @@ class _AccountScreenState extends State<AccountScreen> {
     var authProvider =
         Provider.of<AccountScreenProvider>(context, listen: false);
     authProvider.checkAuth(context);
-    return FutureBuilder(
-      future: authProvider.checkAuth(context),
-      builder: (context, snapshot) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        print("SnapShot ==> ${snapshot.data.toString()}");
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -55,7 +72,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             child: const Center(
                                 child: CircularProgressIndicator()),
                           )
-                        : value.isLogIn == true
+                        : _isLogIn == true
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -70,7 +87,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                                     .profile.userProfile !=
                                                 null
                                             ? Text(
-                                                'Hi ${value.profile.userProfile![0].name.toString()},',
+                                                'Hi ${snapshot.data},',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline2!
@@ -283,12 +300,17 @@ class _AccountScreenState extends State<AccountScreen> {
                                                           ListTile(
                                                     onTap: index == 0
                                                         ? () {
-                                                            value.logout(
-                                                                details: null,
-                                                                context:
-                                                                    context,
-                                                                url:
-                                                                    '${AppUrls.baseUrl}${AppUrls.logout}');
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .signOut()
+                                                                .then((value) {
+                                                              navigateToLogin(
+                                                                  context);
+                                                              FlushBarUtils.flushBar(
+                                                                  'SignOut Successful',
+                                                                  context,
+                                                                  'Success');
+                                                            });
                                                           }
                                                         : () {
                                                             value.deleteAccount(
@@ -346,6 +368,10 @@ class _AccountScreenState extends State<AccountScreen> {
         );
       },
     );
+  }
+
+  navigateToLogin(context) {
+    Navigation().pushRep(const LogIn(), context);
   }
 
   List icon = [Icons.person, Icons.car_crash_sharp, Icons.favorite];

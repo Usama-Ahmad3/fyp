@@ -34,7 +34,7 @@ class OnBoardingProvider extends ChangeNotifier {
     if (currentPageValue == 2) {
       authentication.saveWalk(true);
       // ignore: use_build_context_synchronously
-      Navigation().pushRep(LogIn(provider: getIt()), context);
+      Navigation().pushRep(const LogIn(), context);
     } else {
       _currentPageValue += 1;
       navigateToLast(currentPageValue);

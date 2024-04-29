@@ -33,7 +33,6 @@ class AccountScreenProvider with ChangeNotifier {
   Future checkAuth(BuildContext context) async {
     print('working');
     _loading = true;
-    _isLogIn = await authentication.getAuth();
     print(await authentication.getToken());
     print("LAAAAAAAAAS$isLogIn");
     isLogIn
@@ -118,11 +117,11 @@ class AccountScreenProvider with ChangeNotifier {
   }
 
   navigateToSignup(context) {
-    Navigation().push(SignUp(provider: getIt()), context);
+    Navigation().push(const SignUp(), context);
   }
 
   navigateToLogin(context) {
-    Navigation().pushRep(LogIn(provider: getIt()), context);
+    Navigation().pushRep(const LogIn(), context);
   }
 
   navigateToHomeScreen(context) {

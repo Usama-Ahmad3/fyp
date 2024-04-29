@@ -455,10 +455,10 @@ class _SaveScreenState extends State<SaveScreen> {
   }
 
   navigateToSignup() {
-    Navigation().push(SignUp(provider: getIt()), context);
+    Navigation().push(const SignUp(), context);
   }
 
   navigateToLogin() {
-    Navigation().push(LogIn(provider: getIt()), context);
+    Navigation().push(const LogIn(), context);
   }
 }

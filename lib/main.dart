@@ -21,9 +21,6 @@ import 'package:wizmo/view/home_screens/sell_screen/add_photo/add_photo_provider
 import 'package:wizmo/view/home_screens/sell_screen/description_screen/description_screen_provider.dart';
 import 'package:wizmo/view/home_screens/sell_screen/sell_screen/map_screen/map_screen_provider.dart';
 import 'package:wizmo/view/home_screens/sell_screen/sell_screen/sell_screen_provider.dart';
-import 'package:wizmo/view/login_signup/forget_password/forget_password_provider.dart';
-import 'package:wizmo/view/login_signup/login/login_provider.dart';
-import 'package:wizmo/view/login_signup/signup/signup_provider.dart';
 import 'package:wizmo/view/onboarding/onboarding_provider.dart';
 import 'data/get_repository.dart';
 import 'models/Car Favourites models/get_car_favourites.dart';
@@ -102,11 +99,8 @@ void main() async {
       profile: getIt(),
       authentication: getIt(),
       userProfile: getIt()));
-  getIt.registerSingleton<LoginProvider>(LoginProvider(appRepository: getIt()));
   getIt.registerSingleton<FilterCarProvider>(
       FilterCarProvider(appRepository: getIt(), myAllCarModel: getIt()));
-  getIt.registerSingleton<SignUpProvider>(
-      SignUpProvider(appRepository: getIt()));
   getIt.registerSingleton<HomeProvider>(HomeProvider(
       allCarsHome: getIt(),
       appRepository: getIt(),
@@ -206,10 +200,6 @@ class MyApp extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => LoginProvider(appRepository: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => SignUpProvider(appRepository: getIt())),
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
         ChangeNotifierProvider(
             create: (context) => DescriptionScreenProvider()),
@@ -261,9 +251,6 @@ class MyApp extends StatelessWidget {
                 getCarFavourites: getIt())),
         ChangeNotifierProvider(
             create: (context) => AddPhotoProvider(appRepository: getIt())),
-        ChangeNotifierProvider(
-            create: (context) =>
-                ForgetPasswordProvider(appRepository: getIt())),
         ChangeNotifierProvider(
             create: (context) => SaveProvider(
                 carFavouritesProvider: getIt(),

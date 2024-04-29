@@ -148,6 +148,6 @@ class CarDetailProvider with ChangeNotifier {
   }
 
   navigateToLogin(context) {
-    Navigation().pushRep(LogIn(provider: getIt()), context);
+    Navigation().pushRep(const LogIn(), context);
   }
 }

@@ -7,31 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'package:wizmo/main.dart';
-import 'package:wizmo/res/app_urls/app_urls.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/common_widgets/button_widget.dart';
 import 'package:wizmo/res/common_widgets/text_field_widget.dart';
-import 'package:wizmo/utils/camera_choice.dart';
 import 'package:wizmo/utils/flushbar.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:wizmo/view/login_signup/login/login.dart';
-import 'package:wizmo/view/login_signup/signup/signup_provider.dart';
 import 'package:wizmo/view/login_signup/widgets/text_data.dart';
 import '../../../res/colors/app_colors.dart';
 
 class SignUp extends StatefulWidget {
-  final SignUpProvider provider;
-  const SignUp({super.key, required this.provider});
+  const SignUp({super.key});
 
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
-  SignUpProvider get provider => widget.provider;
   final formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var addressController = TextEditingController();
@@ -42,6 +37,7 @@ class _SignUpState extends State<SignUp> {
   var idCardController = TextEditingController();
   var dobController = TextEditingController();
   bool _obscure = true;
+  bool loading = false;
   File? _image;
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<DateTime?> slecteDtateTime(BuildContext context) => showDatePicker(
@@ -282,6 +278,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
+              const TextData(text: 'Date of Birth'),
               InkWell(
                 onTap: () async {
                   final date = await slecteDtateTime(context);
@@ -309,7 +306,6 @@ class _SignUpState extends State<SignUp> {
                       borderSide: BorderSide(color: AppColors.white)),
                 ),
               ),
-              const TextData(text: 'Date of Birth'),
               SizedBox(
                 height: height * 0.04,
               ),
@@ -412,45 +408,58 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.03,
               ),
-              Consumer<SignUpProvider>(
-                builder: (context, value, child) {
-                  return Center(
-                    child: ButtonWidget(
-                      text: 'Sign Up',
-                      onTap: () async {
-                        if (formKey.currentState!.validate()) {
-                          auth
-                              .createUserWithEmailAndPassword(
-                                  email: emailController.text.toString(),
-                                  password: passwordController.text.toString())
-                              .then((value) async {
-                            final news =
-                                FirebaseFirestore.instance.collection('user');
-                            final id = news.doc().id;
-                            news.doc(id).set({
-                              'name': nameController.text,
-                              'email': emailController.text,
-                              'password': passwordController.text,
-                              'address': addressController.text,
-                              'phone_number': contactController.text,
-                              'date_of_birth': dobController.text,
-                              'driver_license': licenseController.text,
-                              'id_card': idCardController.text,
-                              'profile_image': _image,
-                            });
-                            await Authentication().saveLogin(true);
+              Center(
+                child: ButtonWidget(
+                  text: 'Sign Up',
+                  onTap: () async {
+                    if (formKey.currentState!.validate()) {
+                      auth
+                          .createUserWithEmailAndPassword(
+                              email: emailController.text.toString(),
+                              password: passwordController.text.toString())
+                          .then((value) async {
+                        setState(() {
+                          loading = true;
+                        });
+                        final news =
+                            FirebaseFirestore.instance.collection('users');
+                        final id = news.doc().id;
+                        final ref = firebase_storage.FirebaseStorage.instance
+                            .ref('/profile/$id');
+                        firebase_storage.UploadTask uploadTask =
+                            ref.putFile(File(_image!.path));
+                        await Future.value(uploadTask).then((value) {
+                          loading = false;
+                          setState(() {});
+                        }).onError((error, stackTrace) {
+                          loading = false;
+                          setState(() {});
+                          FlushBarUtils.flushBar(
+                              error.toString(), context, "Error");
+                        });
+                        final url = await ref.getDownloadURL();
+                        news.doc(id).set({
+                          'name': nameController.text,
+                          'email': emailController.text,
+                          'password': passwordController.text,
+                          'address': addressController.text,
+                          'phone_number': contactController.text,
+                          'date_of_birth': dobController.text,
+                          'driver_license': licenseController.text,
+                          'id_card': idCardController.text,
+                          'profile_image': url,
+                        });
+                        await Authentication().saveLogin(true);
 
-                            navigateToHomeScreen();
-                          }).onError((error, stackTrace) {
-                            FlushBarUtils.flushBar(
-                                error.toString(), context, "Error Catch");
-                          });
-                        }
-                      },
-                      loading: value.loading,
-                    ),
-                  );
-                },
+                        navigateToHomeScreen();
+                      }).onError((error, stackTrace) {
+                        FlushBarUtils.flushBar(
+                            error.toString(), context, "Error Catch");
+                      });
+                    }
+                  },
+                  loading: loading,
+                ),
               ),
               SizedBox(
                 height: height * 0.03,
@@ -522,7 +531,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   navigateToSignin() {
-    Navigation().pushRep(LogIn(provider: getIt()), context);
+    Navigation().pushRep(const LogIn(), context);
   }
 
   navigateToHomeScreen() {

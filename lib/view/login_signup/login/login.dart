@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wizmo/main.dart';
-import 'package:wizmo/res/app_urls/app_urls.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/button_widget.dart';
@@ -12,13 +11,11 @@ import 'package:wizmo/utils/flushbar.dart';
 import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:wizmo/view/login_signup/forget_password/forget_password.dart';
-import 'package:wizmo/view/login_signup/login/login_provider.dart';
 import 'package:wizmo/view/login_signup/signup/signup.dart';
 import 'package:wizmo/view/login_signup/widgets/text_data.dart';
 
 class LogIn extends StatefulWidget {
-  final LoginProvider provider;
-  const LogIn({super.key, required this.provider});
+  const LogIn({super.key});
 
   @override
   State<LogIn> createState() => _LogInState();
@@ -26,8 +23,9 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   final formKey = GlobalKey<FormState>();
-  LoginProvider get provider => widget.provider;
   bool loading = false;
+  bool _obscure = false;
+
   FirebaseAuth auth = FirebaseAuth.instance;
   var passwordController = TextEditingController();
   var emailController = TextEditingController();
@@ -73,104 +71,104 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   height: height * 0.03,
                 ),
-                TextData(text: 'Email'),
-                Consumer<LoginProvider>(
-                  builder: (context, value, child) => TextFieldWidget(
-                    controller: emailController,
-                    hintText: 'admin@gmail.com',
-                    prefixIcon: Icons.person,
-                    onTap: () {},
-                    onChanged: (value) {
-                      return null;
-                    },
-                    onValidate: (value) {
-                      if (value.isEmpty) {
-                        return "email field can't empty";
-                      }
-                      return null;
-                    },
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(height * 0.034),
-                        borderSide: BorderSide(color: AppColors.white)),
-                  ),
+                const TextData(text: 'Email'),
+                TextFieldWidget(
+                  controller: emailController,
+                  hintText: 'admin@gmail.com',
+                  prefixIcon: Icons.person,
+                  onTap: () {},
+                  onChanged: (value) {
+                    return null;
+                  },
+                  onValidate: (value) {
+                    if (value.isEmpty) {
+                      return "email field can't empty";
+                    }
+                    return null;
+                  },
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(height * 0.034),
+                      borderSide: BorderSide(color: AppColors.white)),
                 ),
                 SizedBox(
                   height: height * 0.01,
                 ),
-                TextData(text: 'Password'),
-                Consumer<LoginProvider>(
-                  builder: (context, value, child) => TextFieldWidget(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    prefixIcon: Icons.lock,
-                    suffixIcon: Icons.visibility,
-                    hideIcon: Icons.visibility_off,
-                    obscure: value.obscure,
-                    onTap: () {},
-                    passTap: () {
-                      value.passHide();
-                    },
-                    onChanged: (value) {
-                      return null;
-                    },
-                    onValidate: (value) {
-                      if (value.isEmpty) {
-                        return "password field can't empty";
-                      }
-                      return null;
-                    },
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(height * 0.034),
-                        borderSide: BorderSide(color: AppColors.white)),
-                  ),
+                const TextData(text: 'Password'),
+                TextFieldWidget(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  prefixIcon: Icons.lock,
+                  suffixIcon: Icons.visibility,
+                  hideIcon: Icons.visibility_off,
+                  obscure: _obscure,
+                  onTap: () {},
+                  passTap: () {
+                    setState(() {
+                      _obscure = !_obscure;
+                    });
+                  },
+                  onChanged: (value) {
+                    return null;
+                  },
+                  onValidate: (value) {
+                    if (value.isEmpty) {
+                      return "password field can't empty";
+                    }
+                    return null;
+                  },
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(height * 0.034),
+                      borderSide: BorderSide(color: AppColors.white)),
                 ),
                 SizedBox(
                   height: height * 0.06,
                 ),
-                Consumer<LoginProvider>(
-                    builder: (context, value, child) => Center(
-                          child: ButtonWidget(
-                            onTap: () {
-                              if (formKey.currentState!.validate()) {
-                                auth
-                                    .signInWithEmailAndPassword(
-                                        email: emailController.text,
-                                        password: passwordController.text)
-                                    .then((value) async {
-                                  await Authentication().saveLogin(true);
-                                  emailController.clear();
-                                  passwordController.clear();
-                                  if (mounted) {
-                                    FlushBarUtils.flushBar(
-                                        'Success', context, "Login Successful");
-                                    Navigation().pushRep(
-                                        MainBottomBar(provider: getIt()),
-                                        context);
-                                  }
-                                }).onError((error, stackTrace) {
-                                  FlushBarUtils.flushBar(
-                                      error.toString(), context, "Error Catch");
-                                });
-                              }
-                            },
-                            text: 'Log in',
-                            loading: value.loading,
-                          ),
-                        )),
+                Center(
+                  child: ButtonWidget(
+                    onTap: () {
+                      if (formKey.currentState!.validate()) {
+                        setState(() {
+                          loading = true;
+                        });
+                        auth
+                            .signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text)
+                            .then((value) async {
+                          await Authentication().saveLogin(true);
+                          emailController.clear();
+                          passwordController.clear();
+                          if (mounted) {
+                            await FlushBarUtils.flushBar(
+                                'Success', context, "Login Successful");
+                            Navigation().pushRep(
+                                MainBottomBar(provider: getIt()), context);
+                          }
+                        }).onError((error, stackTrace) {
+                          FlushBarUtils.flushBar(
+                              error.toString(), context, "Error Catch");
+                        });
+                        setState(() {
+                          loading = false;
+                        });
+                      }
+                    },
+                    text: 'Log in',
+                    loading: loading,
+                  ),
+                ),
                 SizedBox(
                   height: height * 0.02,
                 ),
-                Consumer<LoginProvider>(
-                  builder: (context, value, child) => InkWell(
-                    onTap: () {
-                      Navigation().push(const ForgetPassword(), context);
-                    },
-                    child: Center(
-                        child: Text(
-                      'Forget password',
-                      style: Theme.of(context).textTheme.headline4,
-                    )),
-                  ),
+                InkWell(
+                  onTap: () {
+                    Navigation().push(const ForgetPassword(), context);
+                  },
+                  child: Center(
+                      child: Text(
+                    'Forget password',
+                    style: Theme.of(context).textTheme.headline4,
+                  )),
                 ),
                 SizedBox(
                   height: height * 0.04,
@@ -185,7 +183,7 @@ class _LogInState extends State<LogIn> {
                     InkWell(
                       onTap: () {
                         print('Go to SignUp Screen');
-                        Navigation().push(SignUp(provider: getIt()), context);
+                        Navigation().push(const SignUp(), context);
                       },
                       child: Text(
                         "Sign Up",
