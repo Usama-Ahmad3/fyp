@@ -23,7 +23,7 @@ class MainBottomBarProvider extends ChangeNotifier {
       provider: getIt(),
     ),
     const SaveScreen(),
-    AccountScreen(provider: getIt()),
+    const AccountScreen(),
   ];
   int _initialIndex = 0;
   int get initialIndex => _initialIndex;

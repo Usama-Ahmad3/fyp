@@ -448,6 +448,7 @@ class _SignUpState extends State<SignUp> {
                           'driver_license': licenseController.text,
                           'id_card': idCardController.text,
                           'profile_image': url,
+                          'id': id
                         });
                         await Authentication().saveLogin(true);
 

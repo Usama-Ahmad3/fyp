@@ -49,7 +49,6 @@ import 'models/selling_models/tax.dart';
 import 'models/selling_models/type_fuel.dart';
 import 'models/selling_models/type_seller.dart';
 import 'models/user_profile.dart';
-import 'view/home_screens/account_screen/account_screen_provider.dart';
 import 'view/onboarding/main_onboarding.dart';
 
 GetIt getIt = GetIt.instance;
@@ -94,11 +93,6 @@ void main() async {
   getIt.registerLazySingleton<DriveTrain>(() => DriveTrain());
   getIt.registerLazySingleton<CarCo2>(() => CarCo2());
   getIt.registerLazySingleton<TypeSeller>(() => TypeSeller());
-  getIt.registerSingleton<AccountScreenProvider>(AccountScreenProvider(
-      appRepository: getIt(),
-      profile: getIt(),
-      authentication: getIt(),
-      userProfile: getIt()));
   getIt.registerSingleton<FilterCarProvider>(
       FilterCarProvider(appRepository: getIt(), myAllCarModel: getIt()));
   getIt.registerSingleton<HomeProvider>(HomeProvider(
@@ -260,12 +254,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) =>
                 CorouselProvider(appRepository: getIt(), allCarsHome: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => AccountScreenProvider(
-                appRepository: getIt(),
-                userProfile: getIt(),
-                authentication: getIt(),
-                profile: getIt())),
         ChangeNotifierProvider(
             create: (context) => HomeProvider(
                 allCarsHome: getIt(),

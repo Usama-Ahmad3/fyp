@@ -39,7 +39,7 @@ class _MainBottomBarState extends State<MainBottomBar> {
       provider: getIt(),
     ),
     const SaveScreen(),
-    AccountScreen(provider: getIt()),
+    const AccountScreen(),
   ];
   pageChange(int index) {
     _initialIndex = index;
