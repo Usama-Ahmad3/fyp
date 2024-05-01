@@ -90,13 +90,6 @@ class _SignUpState extends State<SignUp> {
               ),
               Lottie.asset('assets/lotie_files/cars.json',
                   height: height * 0.4, width: width),
-              // cachedNetworkImage(
-              //     cuisineImageUrl:
-              //         'https://tse4.mm.bing.net/th?id=OIP.ZnFdQZYW4Y7hrqtjsQYQRgHaEJ&pid=Api&P=0&h=220',
-              //     height: height * 0.4,
-              //     imageFit: BoxFit.fill,
-              //     errorFit: BoxFit.contain,
-              //     width: width),
               SizedBox(
                 height: height * 0.015,
               ),
@@ -423,7 +416,7 @@ class _SignUpState extends State<SignUp> {
                         });
                         final news =
                             FirebaseFirestore.instance.collection('users');
-                        final id = news.doc().id;
+                        final id = FirebaseAuth.instance.currentUser!.uid;
                         final ref = firebase_storage.FirebaseStorage.instance
                             .ref('/profile/$id');
                         firebase_storage.UploadTask uploadTask =

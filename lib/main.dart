@@ -7,7 +7,6 @@ import 'package:wizmo/domain/app_repository.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/Favourites_Screens/favourites_provider.dart';
-import 'package:wizmo/view/home_screens/account_screen/edit_profile/edit_profile_provider.dart';
 import 'package:wizmo/view/home_screens/account_screen/view_my_cars/view_my_cars_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/home_provider.dart';
@@ -144,8 +143,6 @@ void main() async {
       ViewMyCarsProvider(appRepository: getIt(), myAllCarModel: getIt()));
   getIt.registerSingleton<CarDetailProvider>(CarDetailProvider(
       appRepository: getIt(), profile: getIt(), authentication: getIt()));
-  getIt.registerSingleton<EditProfileProvider>(
-      EditProfileProvider(appRepository: getIt()));
   runApp(const App());
 }
 
@@ -219,8 +216,6 @@ class MyApp extends StatelessWidget {
                   modelVariation: getIt(),
                   typeSeller: getIt(),
                 )),
-        ChangeNotifierProvider(
-            create: (context) => EditProfileProvider(appRepository: getIt())),
         ChangeNotifierProvider(
             create: (context) => AboutYourCarProvider(
                 appRepository: getIt(),

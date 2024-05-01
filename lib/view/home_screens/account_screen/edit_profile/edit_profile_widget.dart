@@ -5,11 +5,11 @@ import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/cashed_image.dart';
 
 class EditProfileWidget extends StatelessWidget {
- final String name;
- final String location;
- final String image;
+  final String name;
+  final String location;
+  final String image;
   final VoidCallback onTap;
- final File? pickedImage;
+  final File? pickedImage;
   const EditProfileWidget(
       {super.key,
       required this.name,
@@ -99,7 +99,7 @@ class EditProfileWidget extends StatelessWidget {
               backgroundColor: AppColors.buttonColor,
               child: IconButton(
                 onPressed: onTap,
-                icon: Icon(Icons.camera_alt_rounded),
+                icon: const Icon(Icons.camera_alt_rounded),
                 color: AppColors.white,
               ),
             ),
