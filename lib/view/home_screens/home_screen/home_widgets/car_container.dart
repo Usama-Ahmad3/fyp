@@ -10,16 +10,16 @@ import 'package:wizmo/view/home_screens/save_screen/save_provider.dart';
 
 import '../home_provider.dart';
 
-class CarContainer extends StatelessWidget {
-  List image;
-  String price;
-  String model;
-  String name;
-  bool saved;
-  bool admin;
-  String addCarId;
-  VoidCallback onTap;
-  CarContainer(
+class CarContainer extends StatefulWidget {
+  final List image;
+  final String price;
+  final String model;
+  final String name;
+  final bool saved;
+  final bool admin;
+  final String addCarId;
+  final VoidCallback onTap;
+  const CarContainer(
       {super.key,
       required this.image,
       required this.price,
@@ -30,6 +30,13 @@ class CarContainer extends StatelessWidget {
       required this.onTap,
       required this.model});
 
+  @override
+  State<CarContainer> createState() => _CarContainerState();
+}
+
+class _CarContainerState extends State<CarContainer> {
+  final nextPageController = CarouselController();
+  int _initialPage = 0;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -51,181 +58,179 @@ class CarContainer extends StatelessWidget {
                   spreadRadius: 2)
             ],
             color: AppColors.white),
-        child: Consumer<CorouselProvider>(
-          builder: (context, value, child) {
-            return Stack(
-              children: [
-                CarouselSlider.builder(
-                    itemCount: image.length,
-                    itemBuilder: (context, index, realIndex) {
-                      return InkWell(
-                        onTap: onTap,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.23,
-                              width: width,
-                              child: admin
-                                  ? Banner(
-                                      location: BannerLocation.topStart,
-                                      layoutDirection: TextDirection.ltr,
-                                      message: 'Admin',
-                                      color: Colors.red,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            height * 0.01),
-                                        child: Image.network(
-                                          image[index],
-                                          fit: BoxFit.fill,
-                                        ),
-                                        // cachedNetworkImage(
-                                        //     height: height * 0.23,
-                                        //     width: width,
-                                        //     cuisineImageUrl: image[index] ?? '',
-                                        //     placeholder: image[index] ?? '',
-                                        //     imageFit: BoxFit.fill,
-                                        //     errorFit: BoxFit.contain),
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(height * 0.01),
-                                      child: Image.network(
-                                        image[index],
-                                        fit: BoxFit.fill,
-                                      ),
-                                      // cachedNetworkImage(
-                                      //     height: height * 0.23,
-                                      //     width: width,
-                                      //     cuisineImageUrl: image[index] ?? '',
-                                      //     placeholder: image[index] ?? '',
-                                      //     imageFit: BoxFit.fill,
-                                      //     errorFit: BoxFit.fill),
+        child: Stack(
+          children: [
+            CarouselSlider.builder(
+                itemCount: widget.image.length,
+                itemBuilder: (context, index, realIndex) {
+                  return InkWell(
+                    onTap: widget.onTap,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: height * 0.23,
+                          width: width,
+                          child: widget.admin
+                              ? Banner(
+                                  location: BannerLocation.topStart,
+                                  layoutDirection: TextDirection.ltr,
+                                  message: 'Admin',
+                                  color: Colors.red,
+                                  child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(height * 0.01),
+                                    child: Image.network(
+                                      widget.image[index],
+                                      fit: BoxFit.fill,
                                     ),
-                            ),
-                          ],
+                                    // cachedNetworkImage(
+                                    //     height: height * 0.23,
+                                    //     width: width,
+                                    //     cuisineImageUrl: image[index] ?? '',
+                                    //     placeholder: image[index] ?? '',
+                                    //     imageFit: BoxFit.fill,
+                                    //     errorFit: BoxFit.contain),
+                                  ),
+                                )
+                              : ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(height * 0.01),
+                                  child: Image.network(
+                                    widget.image[index],
+                                    fit: BoxFit.fill,
+                                  ),
+                                  // cachedNetworkImage(
+                                  //     height: height * 0.23,
+                                  //     width: width,
+                                  //     cuisineImageUrl: image[index] ?? '',
+                                  //     placeholder: image[index] ?? '',
+                                  //     imageFit: BoxFit.fill,
+                                  //     errorFit: BoxFit.fill),
+                                ),
                         ),
-                      );
+                      ],
+                    ),
+                  );
+                },
+                carouselController: nextPageController,
+                options: CarouselOptions(
+                    autoPlay: true,
+                    autoPlayCurve: Curves.easeInOut,
+                    onPageChanged: (index, reason) {
+                      _initialPage = index;
+                      setState(() {});
                     },
-                    carouselController: value.nextPageController,
-                    options: CarouselOptions(
-                        autoPlay: true,
-                        autoPlayCurve: Curves.easeInOut,
-                        onPageChanged: (index, reason) {
-                          value.onChangeCorousel(index);
-                        },
-                        height: height,
-                        viewportFraction: 1,
-                        animateToClosest: true,
-                        initialPage: value.initialPage,
-                        scrollDirection: Axis.horizontal,
-                        scrollPhysics: const AlwaysScrollableScrollPhysics())),
-                // Positioned(
-                //     top: height * 0.2,
-                //     left: 0.0,
-                //     right: 0.0,
-                //     child: Consumer<CorouselProvider>(
-                //       builder: (context, element, child) => DotsIndicator(
-                //         dotsCount: image.length ?? 1,
-                //         position: element.initialPage ?? 0,
-                //         decorator: DotsDecorator(
-                //           activeSize: Size(width * 0.05, height * 0.01),
-                //           color: AppColors.grey,
-                //           activeColor: AppColors.buttonColor,
-                //           activeShape: RoundedRectangleBorder(
-                //               borderRadius: BorderRadius.circular(5.0)),
-                //         ),
-                //       ),
-                //     )),
-                Positioned(
-                  bottom: height * 0.02,
-                  left: height * 0.009,
-                  right: height * 0.009,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name.length > 10 ? name.substring(0, 10) : name,
-                        style: Theme.of(context).textTheme.headline3!.copyWith(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '$price \$',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3!
-                            .copyWith(color: AppColors.red),
-                      ),
-                    ],
+                    height: height,
+                    viewportFraction: 1,
+                    animateToClosest: true,
+                    initialPage: _initialPage,
+                    scrollDirection: Axis.horizontal,
+                    scrollPhysics: const AlwaysScrollableScrollPhysics())),
+            // Positioned(
+            //     top: height * 0.2,
+            //     left: 0.0,
+            //     right: 0.0,
+            //     child: Consumer<CorouselProvider>(
+            //       builder: (context, element, child) => DotsIndicator(
+            //         dotsCount: image.length ?? 1,
+            //         position: element.initialPage ?? 0,
+            //         decorator: DotsDecorator(
+            //           activeSize: Size(width * 0.05, height * 0.01),
+            //           color: AppColors.grey,
+            //           activeColor: AppColors.buttonColor,
+            //           activeShape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(5.0)),
+            //         ),
+            //       ),
+            //     )),
+            Positioned(
+              bottom: height * 0.02,
+              left: height * 0.009,
+              right: height * 0.009,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.name.length > 10
+                        ? widget.name.substring(0, 10)
+                        : widget.name,
+                    style: Theme.of(context).textTheme.headline3!.copyWith(
+                        color: AppColors.black, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Positioned(
-                  top: height * 0.01,
-                  left: width * 0.03,
-                  child: Container(
-                    height: height * 0.03,
-                    width: width * 0.17,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(height * 0.008),
-                        color: AppColors.grey.withOpacity(0.65),
-                        shape: BoxShape.rectangle),
-                    child: Center(
-                        child: Text(
-                      model,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: AppColors.white),
-                    )),
+                  Text(
+                    '${widget.price} \$',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline3!
+                        .copyWith(color: AppColors.red),
                   ),
-                ),
-                Positioned(
-                    right: width * 0.02,
-                    top: height * 0.009,
-                    child: CircleAvatar(
-                        backgroundColor: AppColors.grey.withOpacity(0.65),
-                        radius: height * 0.021,
-                        child: Consumer<CarFavouritesProvider>(
-                          builder: (context, value, child) => InkWell(
-                            onTap: () {
-                              value.favoriteCarIds
-                                      .contains(int.parse(addCarId.toString()))
-                                  ? value.favouriteCarsRemove(
-                                      localId: addCarId,
-                                      context: context,
-                                      url:
-                                          "${AppUrls.baseUrl}${AppUrls.removeSavedCars}",
-                                    )
-                                  : value.favouriteCarsPost(
-                                      context: context,
-                                      localId: addCarId,
-                                      details: {'car_id': addCarId},
-                                      url:
-                                          '${AppUrls.baseUrl}${AppUrls.postSavedCars}');
-                              context.read<SaveProvider>().change();
-                              // Future.delayed(const Duration(seconds: 2), () {
-                              //   context.read<SaveProvider>().favouriteCarsGet(
-                              //       context: context,
-                              //       url:
-                              //           '${AppUrls.baseUrl}${AppUrls.getSavedCars}');
-                              // });
-                            },
-                            child: Icon(
-                              value.favoriteCarIds
-                                      .contains(int.parse(addCarId.toString()))
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              color: value.favoriteCarIds
-                                      .contains(int.parse(addCarId.toString()))
-                                  ? AppColors.blue
-                                  : AppColors.white,
-                            ),
-                          ),
-                        ))),
-              ],
-            );
-          },
+                ],
+              ),
+            ),
+            Positioned(
+              top: height * 0.01,
+              left: width * 0.03,
+              child: Container(
+                height: height * 0.03,
+                width: width * 0.17,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(height * 0.008),
+                    color: AppColors.grey.withOpacity(0.65),
+                    shape: BoxShape.rectangle),
+                child: Center(
+                    child: Text(
+                  widget.model,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4!
+                      .copyWith(color: AppColors.white),
+                )),
+              ),
+            ),
+            Positioned(
+                right: width * 0.02,
+                top: height * 0.009,
+                child: CircleAvatar(
+                  backgroundColor: AppColors.grey.withOpacity(0.65),
+                  radius: height * 0.021,
+                  child: InkWell(
+                    onTap: () {
+                      // value.favoriteCarIds
+                      //     .contains(int.parse(addCarId.toString()))
+                      //     ? value.favouriteCarsRemove(
+                      //   localId: addCarId,
+                      //   context: context,
+                      //   url:
+                      //   "${AppUrls.baseUrl}${AppUrls.removeSavedCars}",
+                      // )
+                      //     : value.favouriteCarsPost(
+                      //     context: context,
+                      //     localId: addCarId,
+                      //     details: {'car_id': addCarId},
+                      //     url:
+                      //     '${AppUrls.baseUrl}${AppUrls.postSavedCars}');
+                      // context.read<SaveProvider>().change();
+                      // Future.delayed(const Duration(seconds: 2), () {
+                      //   context.read<SaveProvider>().favouriteCarsGet(
+                      //       context: context,
+                      //       url:
+                      //           '${AppUrls.baseUrl}${AppUrls.getSavedCars}');
+                      // });
+                    },
+                    child: Icon(
+                        // value.favoriteCarIds
+                        //     .contains(int.parse(addCarId.toString()))?
+                        Icons.star,
+                        // : Icons.star_border,
+                        color:
+                            // value.favoriteCarIds
+                            //     .contains(int.parse(addCarId.toString())) ?
+                            AppColors.blue
+                        // : AppColors.white,
+                        ),
+                  ),
+                )),
+          ],
         ),
       ),
     );
