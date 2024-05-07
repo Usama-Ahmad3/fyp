@@ -6,13 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wizmo/domain/app_repository.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/view/home_screens/Favourites_Screens/favourites_provider.dart';
 import 'package:wizmo/view/home_screens/account_screen/view_my_cars/view_my_cars_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
-import 'package:wizmo/view/home_screens/home_screen/home_provider.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar_provider.dart';
-import 'package:wizmo/view/home_screens/save_screen/save_provider.dart';
 import 'package:wizmo/view/home_screens/search_screen/filter_cars/filter_car_provider.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_provider.dart';
 import 'package:wizmo/view/home_screens/sell_screen/about_your_car/about_your_car_provider.dart';
@@ -94,11 +91,6 @@ void main() async {
   getIt.registerLazySingleton<TypeSeller>(() => TypeSeller());
   getIt.registerSingleton<FilterCarProvider>(
       FilterCarProvider(appRepository: getIt(), myAllCarModel: getIt()));
-  getIt.registerSingleton<HomeProvider>(HomeProvider(
-      allCarsHome: getIt(),
-      appRepository: getIt(),
-      carModel: getIt(),
-      makeModel: getIt()));
   getIt.registerSingleton<SellScreenProvider>(SellScreenProvider(
     appRepository: getIt(),
     authentication: getIt(),
@@ -130,15 +122,6 @@ void main() async {
       typeFuel: getIt()));
   getIt.registerSingleton<AddPhotoProvider>(
       AddPhotoProvider(appRepository: getIt()));
-  getIt.registerSingleton<CarFavouritesProvider>(CarFavouritesProvider(
-      appRepository: getIt(),
-      getCarFavourites: getIt(),
-      postCarFavourites: getIt()));
-  getIt.registerSingleton<SaveProvider>(SaveProvider(
-      carFavouritesProvider: getIt(),
-      appRepository: getIt(),
-      authentication: getIt(),
-      getCarFavourites: getIt()));
   getIt.registerSingleton<ViewMyCarsProvider>(
       ViewMyCarsProvider(appRepository: getIt(), myAllCarModel: getIt()));
   getIt.registerSingleton<CarDetailProvider>(CarDetailProvider(
@@ -234,27 +217,7 @@ class MyApp extends StatelessWidget {
             create: (context) => ViewMyCarsProvider(
                 appRepository: getIt(), myAllCarModel: getIt())),
         ChangeNotifierProvider(
-            create: (context) => CarFavouritesProvider(
-                appRepository: getIt(),
-                postCarFavourites: getIt(),
-                getCarFavourites: getIt())),
-        ChangeNotifierProvider(
             create: (context) => AddPhotoProvider(appRepository: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => SaveProvider(
-                carFavouritesProvider: getIt(),
-                appRepository: getIt(),
-                getCarFavourites: getIt(),
-                authentication: getIt())),
-        ChangeNotifierProvider(
-            create: (context) =>
-                CorouselProvider(appRepository: getIt(), allCarsHome: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => HomeProvider(
-                allCarsHome: getIt(),
-                appRepository: getIt(),
-                makeModel: getIt(),
-                carModel: getIt())),
         ChangeNotifierProvider(
             create: (context) => CarDetailProvider(
                 appRepository: getIt(),

@@ -11,6 +11,7 @@ class DynamicCarDetailModel {
   String? latitude;
   String? longitude;
   String? number;
+  bool? saved;
   String? email;
   List? images;
 
@@ -21,6 +22,7 @@ class DynamicCarDetailModel {
       this.price,
       this.addCarId,
       this.sellerType,
+      this.saved,
       this.sellerName,
       this.location,
       this.latitude,

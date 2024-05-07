@@ -1,23 +1,13 @@
-import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wizmo/res/app_urls/app_urls.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/view/home_screens/Favourites_Screens/favourites_provider.dart';
-import 'package:wizmo/view/home_screens/save_screen/save_provider.dart';
-
-import '../home_provider.dart';
 
 class CarContainer extends StatefulWidget {
   final List image;
   final String price;
   final String model;
   final String name;
-  final bool saved;
   final String addCarId;
   final VoidCallback onTap;
   const CarContainer(
@@ -26,7 +16,6 @@ class CarContainer extends StatefulWidget {
       required this.price,
       required this.addCarId,
       required this.name,
-      this.saved = false,
       required this.onTap,
       required this.model});
 
@@ -76,13 +65,6 @@ class _CarContainerState extends State<CarContainer> {
                               widget.image[index],
                               fit: BoxFit.fill,
                             ),
-                            // cachedNetworkImage(
-                            //     height: height * 0.23,
-                            //     width: width,
-                            //     cuisineImageUrl: image[index] ?? '',
-                            //     placeholder: image[index] ?? '',
-                            //     imageFit: BoxFit.fill,
-                            //     errorFit: BoxFit.fill),
                           ),
                         ),
                       ],
@@ -103,23 +85,6 @@ class _CarContainerState extends State<CarContainer> {
                     initialPage: _initialPage,
                     scrollDirection: Axis.horizontal,
                     scrollPhysics: const AlwaysScrollableScrollPhysics())),
-            // Positioned(
-            //     top: height * 0.2,
-            //     left: 0.0,
-            //     right: 0.0,
-            //     child: Consumer<CorouselProvider>(
-            //       builder: (context, element, child) => DotsIndicator(
-            //         dotsCount: image.length ?? 1,
-            //         position: element.initialPage ?? 0,
-            //         decorator: DotsDecorator(
-            //           activeSize: Size(width * 0.05, height * 0.01),
-            //           color: AppColors.grey,
-            //           activeColor: AppColors.buttonColor,
-            //           activeShape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(5.0)),
-            //         ),
-            //       ),
-            //     )),
             Positioned(
               bottom: height * 0.02,
               left: height * 0.009,
@@ -167,29 +132,50 @@ class _CarContainerState extends State<CarContainer> {
             Positioned(
                 right: width * 0.02,
                 top: height * 0.009,
-                child: CircleAvatar(
-                  backgroundColor: AppColors.grey.withOpacity(0.65),
-                  radius: height * 0.021,
-                  child: InkWell(
-                    onTap: () async {
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection('cars')
-                            .doc(widget.addCarId)
-                            .update({"isSaved": !widget.saved}).then((value) {
-                          setState(() {
-                            print("djjdjdj");
-                          });
-                        });
-                      } catch (e) {
-                        print("djjdjdj ==> Error $e");
-                      }
-                    },
-                    child: Icon(
-                      widget.saved ? Icons.star : Icons.star_border,
-                      color: widget.saved ? AppColors.blue : AppColors.white,
-                    ),
-                  ),
+                child: StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('cars')
+                      .doc(widget.addCarId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox.shrink();
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return const Center(
+                          child: Text('Document does not exist'));
+                    } else {
+                      var car = snapshot.data!.data()! as Map<String, dynamic>;
+                      return CircleAvatar(
+                        backgroundColor: AppColors.grey.withOpacity(0.65),
+                        radius: height * 0.021,
+                        child: InkWell(
+                          onTap: () async {
+                            try {
+                              await FirebaseFirestore.instance
+                                  .collection('cars')
+                                  .doc(widget.addCarId)
+                                  .update({"isSaved": !car['isSaved']}).then(
+                                      (value) {
+                                setState(() {
+                                  print("djjdjdj");
+                                });
+                              });
+                            } catch (e) {
+                              print("djjdjdj ==> Error $e");
+                            }
+                          },
+                          child: Icon(
+                            car['isSaved'] ? Icons.star : Icons.star_border,
+                            color: car['isSaved']
+                                ? AppColors.blue
+                                : AppColors.white,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 )),
           ],
         ),

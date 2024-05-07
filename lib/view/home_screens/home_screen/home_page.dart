@@ -1,24 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wizmo/main.dart';
 import 'package:wizmo/models/dynamic_car_detail_model.dart';
-import 'package:wizmo/res/app_urls/app_urls.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/empty_screen.dart';
 import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/Favourites_Screens/favourites_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
-import 'package:wizmo/view/home_screens/home_screen/home_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/home_widgets/car_container.dart';
-import 'package:wizmo/view/login_signup/widgets/constants.dart';
 import 'car_detail_screen/car_detail_screen.dart';
-import 'home_initial_params.dart';
 import 'home_widgets/top_searchbar.dart';
 
 class HomePage extends StatefulWidget {
-  final HomeInitialParams initialParams;
-  const HomePage({super.key, required this.initialParams});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => HomePageState();
@@ -29,7 +22,6 @@ class HomePageState extends State<HomePage> {
     return FirebaseFirestore.instance.collection('cars').get();
   }
 
-  HomeProvider get homeProvider => widget.initialParams.provider;
   static bool loading = false;
   @override
   void initState() {
@@ -93,13 +85,13 @@ class HomePageState extends State<HomePage> {
                                       price: document['Price'],
                                       name: document['model'],
                                       model: document['model'],
-                                      saved: document['isSaved'],
                                       onTap: () {
                                         DynamicCarDetailModel imageDetail =
                                             DynamicCarDetailModel(
                                                 model: document['model'],
                                                 images: document['images'],
                                                 name: document['name'],
+                                                saved: document['isSaved'],
                                                 description:
                                                     document['Description'],
                                                 location: document["Location"],

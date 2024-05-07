@@ -141,15 +141,18 @@ class _LogInState extends State<LogIn> {
                           if (mounted) {
                             await FlushBarUtils.flushBar(
                                 'Success', context, "Login Successful");
+                            setState(() {
+                              loading = false;
+                            });
                             Navigation().pushRep(
                                 MainBottomBar(provider: getIt()), context);
                           }
                         }).onError((error, stackTrace) {
                           FlushBarUtils.flushBar(
                               error.toString(), context, "Error Catch");
-                        });
-                        setState(() {
-                          loading = false;
+                          setState(() {
+                            loading = false;
+                          });
                         });
                       }
                     },
