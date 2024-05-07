@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wizmo/res/app_urls/app_urls.dart';
@@ -16,7 +18,6 @@ class CarContainer extends StatefulWidget {
   final String model;
   final String name;
   final bool saved;
-  final bool admin;
   final String addCarId;
   final VoidCallback onTap;
   const CarContainer(
@@ -24,7 +25,6 @@ class CarContainer extends StatefulWidget {
       required this.image,
       required this.price,
       required this.addCarId,
-      this.admin = false,
       required this.name,
       this.saved = false,
       required this.onTap,
@@ -70,43 +70,20 @@ class _CarContainerState extends State<CarContainer> {
                         SizedBox(
                           height: height * 0.23,
                           width: width,
-                          child: widget.admin
-                              ? Banner(
-                                  location: BannerLocation.topStart,
-                                  layoutDirection: TextDirection.ltr,
-                                  message: 'Admin',
-                                  color: Colors.red,
-                                  child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(height * 0.01),
-                                    child: Image.network(
-                                      widget.image[index],
-                                      fit: BoxFit.fill,
-                                    ),
-                                    // cachedNetworkImage(
-                                    //     height: height * 0.23,
-                                    //     width: width,
-                                    //     cuisineImageUrl: image[index] ?? '',
-                                    //     placeholder: image[index] ?? '',
-                                    //     imageFit: BoxFit.fill,
-                                    //     errorFit: BoxFit.contain),
-                                  ),
-                                )
-                              : ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(height * 0.01),
-                                  child: Image.network(
-                                    widget.image[index],
-                                    fit: BoxFit.fill,
-                                  ),
-                                  // cachedNetworkImage(
-                                  //     height: height * 0.23,
-                                  //     width: width,
-                                  //     cuisineImageUrl: image[index] ?? '',
-                                  //     placeholder: image[index] ?? '',
-                                  //     imageFit: BoxFit.fill,
-                                  //     errorFit: BoxFit.fill),
-                                ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(height * 0.01),
+                            child: Image.network(
+                              widget.image[index],
+                              fit: BoxFit.fill,
+                            ),
+                            // cachedNetworkImage(
+                            //     height: height * 0.23,
+                            //     width: width,
+                            //     cuisineImageUrl: image[index] ?? '',
+                            //     placeholder: image[index] ?? '',
+                            //     imageFit: BoxFit.fill,
+                            //     errorFit: BoxFit.fill),
+                          ),
                         ),
                       ],
                     ),
@@ -194,40 +171,24 @@ class _CarContainerState extends State<CarContainer> {
                   backgroundColor: AppColors.grey.withOpacity(0.65),
                   radius: height * 0.021,
                   child: InkWell(
-                    onTap: () {
-                      // value.favoriteCarIds
-                      //     .contains(int.parse(addCarId.toString()))
-                      //     ? value.favouriteCarsRemove(
-                      //   localId: addCarId,
-                      //   context: context,
-                      //   url:
-                      //   "${AppUrls.baseUrl}${AppUrls.removeSavedCars}",
-                      // )
-                      //     : value.favouriteCarsPost(
-                      //     context: context,
-                      //     localId: addCarId,
-                      //     details: {'car_id': addCarId},
-                      //     url:
-                      //     '${AppUrls.baseUrl}${AppUrls.postSavedCars}');
-                      // context.read<SaveProvider>().change();
-                      // Future.delayed(const Duration(seconds: 2), () {
-                      //   context.read<SaveProvider>().favouriteCarsGet(
-                      //       context: context,
-                      //       url:
-                      //           '${AppUrls.baseUrl}${AppUrls.getSavedCars}');
-                      // });
+                    onTap: () async {
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('cars')
+                            .doc(widget.addCarId)
+                            .update({"isSaved": !widget.saved}).then((value) {
+                          setState(() {
+                            print("djjdjdj");
+                          });
+                        });
+                      } catch (e) {
+                        print("djjdjdj ==> Error $e");
+                      }
                     },
                     child: Icon(
-                        // value.favoriteCarIds
-                        //     .contains(int.parse(addCarId.toString()))?
-                        Icons.star,
-                        // : Icons.star_border,
-                        color:
-                            // value.favoriteCarIds
-                            //     .contains(int.parse(addCarId.toString())) ?
-                            AppColors.blue
-                        // : AppColors.white,
-                        ),
+                      widget.saved ? Icons.star : Icons.star_border,
+                      color: widget.saved ? AppColors.blue : AppColors.white,
+                    ),
                   ),
                 )),
           ],

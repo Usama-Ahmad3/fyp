@@ -1,17 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:wizmo/models/dynamic_car_detail_model.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:wizmo/utils/flushbar.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
+import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_screen.dart';
 
-class ProfileCarDetail extends StatelessWidget {
+class ProfileCarDetail extends StatefulWidget {
   final DynamicCarDetailModel profile;
-  final CarDetailProvider provider;
   bool auth;
-  ProfileCarDetail(
-      {super.key,
-      required this.profile,
-      required this.provider,
-      this.auth = false});
+  ProfileCarDetail({super.key, required this.profile, this.auth = false});
+
+  @override
+  State<ProfileCarDetail> createState() => _ProfileCarDetailState();
+}
+
+class _ProfileCarDetailState extends State<ProfileCarDetail> {
+  openMapSheet(context, longitude, latitude, location) async {
+    try {
+      final availableMaps = await MapLauncher.installedMaps;
+      showBottomSheet(
+          context: context,
+          backgroundColor: AppColors.buttonColor,
+          enableDrag: true,
+          builder: (context) {
+            return SingleChildScrollView(
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    children: [
+                      for (var map in availableMaps)
+                        ListTile(
+                          onTap: () => map.showMarker(
+                            coords: Coords(double.parse(longitude),
+                                double.parse(latitude)),
+                            title: location,
+                          ),
+                          title: Text(
+                            map.mapName,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3!
+                                .copyWith(color: AppColors.white),
+                          ),
+                          leading: SvgPicture.asset(
+                            map.icon,
+                            height: 30.0,
+                            width: 30.0,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+    } catch (e) {
+      print(e);
+      FlushBarUtils.flushBar('Error While Opening Map', context, "Error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +89,21 @@ class ProfileCarDetail extends StatelessWidget {
               backgroundImage: const AssetImage('assets/images/profile.jpeg'),
             ),
             title: Text(
-              profile.sellerName.toString(),
+              widget.profile.sellerName.toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              profile.location.toString().length > 40
-                  ? profile.location.toString().substring(0, 40)
-                  : profile.location.toString(),
+              widget.profile.location.toString().length > 40
+                  ? widget.profile.location.toString().substring(0, 40)
+                  : widget.profile.location.toString(),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             trailing: InkWell(
               onTap: () {
-                auth
-                    ? provider.openMapSheet(context, profile.longitude,
-                        profile.latitude, profile.location)
-                    : provider.popupDialog(
+                widget.auth
+                    ? openMapSheet(context, widget.profile.longitude,
+                        widget.profile.latitude, widget.profile.location)
+                    : DetailScreenState.popupDialog(
                         context: context,
                         text: 'Login required',
                         buttonText: 'Login');

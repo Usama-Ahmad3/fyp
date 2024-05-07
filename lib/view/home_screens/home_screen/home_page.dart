@@ -21,16 +21,16 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.initialParams});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   Future<QuerySnapshot> fetchDataFromFirebase() async {
     return FirebaseFirestore.instance.collection('cars').get();
   }
 
   HomeProvider get homeProvider => widget.initialParams.provider;
-  bool _loading = false;
+  static bool loading = false;
   @override
   void initState() {
     print('In The Home Screen');
@@ -41,32 +41,24 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final provider = Provider.of<CarFavouritesProvider>(context, listen: false);
-    provider.favouriteCarsGet(
-        context: context, url: '${AppUrls.baseUrl}${AppUrls.getSavedCars}');
     return RefreshIndicator(
         displacement: 200,
         onRefresh: () async {
-          _loading = true;
+          loading = true;
           Future.delayed(const Duration(seconds: 2), () {
-            _loading = false;
+            loading = false;
             setState(() {});
           });
         },
-        child: _loading
+        child: loading
             ? const Center(child: CircularProgressIndicator())
             : Scaffold(
                 body: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
-                          onTap: () {
-                            print(provider.favoriteCarIds);
-                          },
-                          child: SafeArea(
-                              child: Image.asset('assets/images/wizmo.jpg'))),
-                      TopSearchBar(),
+                      SafeArea(child: Image.asset('assets/images/wizmo.jpg')),
+                      const TopSearchBar(),
                       FutureBuilder(
                         future: fetchDataFromFirebase(),
                         builder: (context, snapshot) {
@@ -99,13 +91,9 @@ class _HomePageState extends State<HomePage> {
                                       addCarId: document['id'],
                                       image: document['images'],
                                       price: document['Price'],
-                                      admin:
-                                          // document[] ==
-                                          //     'admin'
-                                          //     ? true :
-                                          false,
-                                      name: document['name'],
+                                      name: document['model'],
                                       model: document['model'],
+                                      saved: document['isSaved'],
                                       onTap: () {
                                         DynamicCarDetailModel imageDetail =
                                             DynamicCarDetailModel(
@@ -118,8 +106,9 @@ class _HomePageState extends State<HomePage> {
                                                 sellerType:
                                                     document['Seller Type'],
                                                 addCarId: document['id'],
-                                                longitude: document[""],
-                                                latitude: document[""],
+                                                longitude:
+                                                    document["longitude"],
+                                                latitude: document["latitude"],
                                                 email: document['email'],
                                                 number:
                                                     document['phone_number'],
@@ -127,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                                 price: document['Price']);
                                         var detail = CarDetailInitials(
                                             carDetails: imageDetail,
-                                            featureName: featureNames,
+                                            featureName: document['features'],
                                             features:
                                                 document['feature_values'],
                                             onTap: () {},

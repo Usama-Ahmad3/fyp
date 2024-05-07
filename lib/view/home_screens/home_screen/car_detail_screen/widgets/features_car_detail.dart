@@ -3,12 +3,16 @@ import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 
-class FeaturesCarDetail extends StatelessWidget {
+class FeaturesCarDetail extends StatefulWidget {
   final CarDetailInitials carDetailInitials;
-  final CarDetailProvider provider;
-  const FeaturesCarDetail(
-      {super.key, required this.carDetailInitials, required this.provider});
+  const FeaturesCarDetail({super.key, required this.carDetailInitials});
 
+  @override
+  State<FeaturesCarDetail> createState() => _FeaturesCarDetailState();
+}
+
+class _FeaturesCarDetailState extends State<FeaturesCarDetail> {
+  bool viewMore = false;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
@@ -21,7 +25,7 @@ class FeaturesCarDetail extends StatelessWidget {
           Wrap(
             children: [
               ...List.generate(
-                  provider.viewMore ? carDetailInitials.features!.length : 4,
+                  viewMore ? widget.carDetailInitials.features!.length : 4,
                   (index) => Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: width * 0.025,
@@ -33,7 +37,7 @@ class FeaturesCarDetail extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                carDetailInitials.featureName![index]
+                                widget.carDetailInitials.featureName![index]
                                     .toString(),
                                 style: Theme.of(context).textTheme.headline3,
                               ),
@@ -49,14 +53,16 @@ class FeaturesCarDetail extends StatelessWidget {
                                         BorderRadius.circular(height * 0.01)),
                                 child: Center(
                                   child: Text(
-                                    carDetailInitials.features![index]
+                                    widget.carDetailInitials.features![index]
                                                 .toString()
                                                 .length >
                                             17
-                                        ? carDetailInitials.features![index]
+                                        ? widget
+                                            .carDetailInitials.features![index]
                                             .toString()
                                             .substring(0, 17)
-                                        : carDetailInitials.features![index]
+                                        : widget
+                                            .carDetailInitials.features![index]
                                             .toString(),
                                     style: Theme.of(context)
                                         .textTheme
@@ -76,12 +82,13 @@ class FeaturesCarDetail extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              provider.onClick();
+              viewMore = !viewMore;
+              setState(() {});
             },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.023),
               child: Text(
-                provider.viewMore ? 'View Less' : 'View More',
+                viewMore ? 'View Less' : 'View More',
                 style: Theme.of(context)
                     .textTheme
                     .headline4!
