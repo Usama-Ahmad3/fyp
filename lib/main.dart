@@ -9,7 +9,6 @@ import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/account_screen/view_my_cars/view_my_cars_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
-import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar_provider.dart';
 import 'package:wizmo/view/home_screens/search_screen/filter_cars/filter_car_provider.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_provider.dart';
 import 'package:wizmo/view/home_screens/sell_screen/about_your_car/about_your_car_provider.dart';
@@ -105,7 +104,6 @@ void main() async {
     modelVariation: getIt(),
     typeSeller: getIt(),
   ));
-  getIt.registerSingleton<MainBottomBarProvider>(MainBottomBarProvider());
   getIt.registerSingleton<MapScreenProvider>(MapScreenProvider());
   getIt.registerSingleton<AboutYourCarProvider>(AboutYourCarProvider(
       appRepository: getIt(),
@@ -183,7 +181,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) =>
                 SearchProvider(carModel: getIt(), appRepository: getIt())),
-        ChangeNotifierProvider(create: (context) => MainBottomBarProvider()),
         ChangeNotifierProvider(
             create: (context) => SellScreenProvider(
                   appRepository: getIt(),
@@ -245,7 +242,6 @@ class MyApp extends StatelessWidget {
                     color: AppColors.grey, fontSize: height * 0.017))),
         home: walk
             ? MainBottomBar(
-                provider: getIt(),
                 index: 0,
               )
             : MainOnBoarding(),

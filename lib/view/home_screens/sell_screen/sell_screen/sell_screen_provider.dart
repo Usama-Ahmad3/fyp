@@ -488,7 +488,7 @@ class SellScreenProvider extends ChangeNotifier {
   }
 
   navigateToHome(context) async {
-    Navigation().pushRep(MainBottomBar(provider: getIt(), index: 0), context);
+    Navigation().pushRep(MainBottomBar(index: 0), context);
     await FlushBarUtils.flushBar(
         'Login required to add car for sale', context, 'Login Required');
   }

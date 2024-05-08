@@ -153,7 +153,6 @@ class _TopSearchBarState extends State<TopSearchBar> {
                             Navigation().pushRep(
                                 MainBottomBar(
                                   index: 1,
-                                  provider: getIt(),
                                 ),
                                 context);
                           },

@@ -529,6 +529,6 @@ class _SignUpState extends State<SignUp> {
   }
 
   navigateToHomeScreen() {
-    Navigation().pushRep(MainBottomBar(provider: getIt()), context);
+    Navigation().pushRep(MainBottomBar(), context);
   }
 }

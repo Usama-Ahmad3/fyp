@@ -71,6 +71,6 @@ class CongratsScreen extends StatelessWidget {
   }
 
   navigateToHomeScreen(context) {
-    Navigation().pushRep(MainBottomBar(provider: getIt(), index: 0), context);
+    Navigation().pushRep(MainBottomBar(index: 0), context);
   }
 }

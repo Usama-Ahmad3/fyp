@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wizmo/main.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:wizmo/res/common_widgets/popup.dart';
 import 'package:wizmo/view/home_screens/account_screen/account_screen.dart';
 import 'package:wizmo/view/home_screens/home_screen/home_page.dart';
-import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar_provider.dart';
 import 'package:wizmo/view/home_screens/save_screen/save_screen.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_screen.dart';
 import 'package:wizmo/view/home_screens/sell_screen/sell_screen/sell_screen.dart';
@@ -13,14 +14,29 @@ import 'package:wizmo/view/home_screens/sell_screen/sell_screen/sell_screen.dart
 // ignore: must_be_immutable
 class MainBottomBar extends StatefulWidget {
   int index;
-  final MainBottomBarProvider provider;
-  MainBottomBar({super.key, this.index = 0, required this.provider});
+  MainBottomBar({
+    super.key,
+    this.index = 0,
+  });
 
   @override
   State<MainBottomBar> createState() => _MainBottomBarState();
 }
 
 class _MainBottomBarState extends State<MainBottomBar> {
+  popupDialog(
+      {required BuildContext context,
+      required String text,
+      required String buttonText}) {
+    popup(
+        context: context,
+        text: text,
+        onTap: () {
+          exit(1);
+        },
+        buttonText: buttonText);
+  }
+
   @override
   void initState() {
     _initialIndex = widget.index;
@@ -45,11 +61,9 @@ class _MainBottomBarState extends State<MainBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    var authProvider =
-        Provider.of<MainBottomBarProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () {
-        return authProvider.popupDialog(
+        return popupDialog(
             buttonText: 'Yes', text: "You're going to exit", context: context);
       },
       child: Scaffold(

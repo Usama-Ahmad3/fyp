@@ -144,8 +144,7 @@ class _LogInState extends State<LogIn> {
                             setState(() {
                               loading = false;
                             });
-                            Navigation().pushRep(
-                                MainBottomBar(provider: getIt()), context);
+                            Navigation().pushRep(MainBottomBar(), context);
                           }
                         }).onError((error, stackTrace) {
                           FlushBarUtils.flushBar(

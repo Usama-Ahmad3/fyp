@@ -432,7 +432,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   navigateToSavedCars() {
-    Navigation().pushRep(MainBottomBar(provider: getIt(), index: 3), context);
+    Navigation().pushRep(MainBottomBar(index: 3), context);
   }
 
   List icon = [Icons.person, Icons.car_crash_sharp, Icons.favorite];
