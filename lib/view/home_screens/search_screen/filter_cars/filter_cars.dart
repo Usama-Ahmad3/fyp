@@ -84,7 +84,6 @@ class FilterCars extends StatelessWidget {
                                   carDetails: carDetails,
                                   myCars: true,
                                   featureName: featureNames,
-                                  provider: getIt(),
                                   features:
                                       value.myAllCarModel.cars![index].features,
                                   onTap: () {});

@@ -4,7 +4,6 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:wizmo/models/dynamic_car_detail_model.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_screen.dart';
 
 class ProfileCarDetail extends StatefulWidget {

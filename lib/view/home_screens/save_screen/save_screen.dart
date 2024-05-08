@@ -166,8 +166,7 @@ class _SaveScreenState extends State<SaveScreen> {
                                                                     'features'],
                                                             features: document[
                                                                 'feature_values'],
-                                                            onTap: () {},
-                                                            provider: getIt());
+                                                            onTap: () {});
                                                     navigateToCarDetail(
                                                         detail, context);
                                                   },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 
 class FeaturesCarDetail extends StatefulWidget {
   final CarDetailInitials carDetailInitials;

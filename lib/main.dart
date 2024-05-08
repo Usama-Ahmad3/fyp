@@ -7,15 +7,9 @@ import 'package:wizmo/domain/app_repository.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/account_screen/view_my_cars/view_my_cars_provider.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_provider.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:wizmo/view/home_screens/search_screen/filter_cars/filter_car_provider.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_provider.dart';
-import 'package:wizmo/view/home_screens/sell_screen/about_your_car/about_your_car_provider.dart';
-import 'package:wizmo/view/home_screens/sell_screen/add_photo/add_photo_provider.dart';
-import 'package:wizmo/view/home_screens/sell_screen/description_screen/description_screen_provider.dart';
-import 'package:wizmo/view/home_screens/sell_screen/sell_screen/map_screen/map_screen_provider.dart';
-import 'package:wizmo/view/home_screens/sell_screen/sell_screen/sell_screen_provider.dart';
 import 'package:wizmo/view/onboarding/onboarding_provider.dart';
 import 'data/get_repository.dart';
 import 'models/Car Favourites models/get_car_favourites.dart';
@@ -64,8 +58,6 @@ void main() async {
   getIt.registerLazySingleton<GetCarFavourites>(() => GetCarFavourites());
   getIt.registerLazySingleton<AllCarsHome>(() => AllCarsHome());
   getIt.registerLazySingleton<MakeModel>(() => MakeModel());
-  getIt.registerLazySingleton<DescriptionScreenProvider>(
-      () => DescriptionScreenProvider());
   getIt.registerLazySingleton<CarModel>(() => CarModel());
   getIt.registerLazySingleton<TypeFuel>(() => TypeFuel());
   getIt.registerLazySingleton<CarFuelConsumption>(() => CarFuelConsumption());
@@ -90,40 +82,8 @@ void main() async {
   getIt.registerLazySingleton<TypeSeller>(() => TypeSeller());
   getIt.registerSingleton<FilterCarProvider>(
       FilterCarProvider(appRepository: getIt(), myAllCarModel: getIt()));
-  getIt.registerSingleton<SellScreenProvider>(SellScreenProvider(
-    appRepository: getIt(),
-    authentication: getIt(),
-    carModel: getIt(),
-    makeModel: getIt(),
-    sellCarModel: getIt(),
-    acceleration: getIt(),
-    bodyTypee: getIt(),
-    carCo2: getIt(),
-    carYear: getIt(),
-    driveTrain: getIt(),
-    modelVariation: getIt(),
-    typeSeller: getIt(),
-  ));
-  getIt.registerSingleton<MapScreenProvider>(MapScreenProvider());
-  getIt.registerSingleton<AboutYourCarProvider>(AboutYourCarProvider(
-      appRepository: getIt(),
-      carColor: getIt(),
-      carEnginePower: getIt(),
-      carEngineSize: getIt(),
-      doors: getIt(),
-      fuelConsumption: getIt(),
-      gearbox: getIt(),
-      insurance: getIt(),
-      mileage: getIt(),
-      seats: getIt(),
-      tax: getIt(),
-      typeFuel: getIt()));
-  getIt.registerSingleton<AddPhotoProvider>(
-      AddPhotoProvider(appRepository: getIt()));
   getIt.registerSingleton<ViewMyCarsProvider>(
       ViewMyCarsProvider(appRepository: getIt(), myAllCarModel: getIt()));
-  getIt.registerSingleton<CarDetailProvider>(CarDetailProvider(
-      appRepository: getIt(), profile: getIt(), authentication: getIt()));
   runApp(const App());
 }
 
@@ -174,53 +134,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
         ChangeNotifierProvider(
-            create: (context) => DescriptionScreenProvider()),
-        ChangeNotifierProvider(
             create: (context) => FilterCarProvider(
                 myAllCarModel: getIt(), appRepository: getIt())),
         ChangeNotifierProvider(
             create: (context) =>
                 SearchProvider(carModel: getIt(), appRepository: getIt())),
         ChangeNotifierProvider(
-            create: (context) => SellScreenProvider(
-                  appRepository: getIt(),
-                  authentication: getIt(),
-                  carModel: getIt(),
-                  makeModel: getIt(),
-                  sellCarModel: getIt(),
-                  acceleration: getIt(),
-                  bodyTypee: getIt(),
-                  carCo2: getIt(),
-                  carYear: getIt(),
-                  driveTrain: getIt(),
-                  modelVariation: getIt(),
-                  typeSeller: getIt(),
-                )),
-        ChangeNotifierProvider(
-            create: (context) => AboutYourCarProvider(
-                appRepository: getIt(),
-                carColor: getIt(),
-                carEnginePower: getIt(),
-                carEngineSize: getIt(),
-                doors: getIt(),
-                fuelConsumption: getIt(),
-                gearbox: getIt(),
-                insurance: getIt(),
-                mileage: getIt(),
-                seats: getIt(),
-                tax: getIt(),
-                typeFuel: getIt())),
-        ChangeNotifierProvider(
             create: (context) => ViewMyCarsProvider(
                 appRepository: getIt(), myAllCarModel: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => AddPhotoProvider(appRepository: getIt())),
-        ChangeNotifierProvider(
-            create: (context) => CarDetailProvider(
-                appRepository: getIt(),
-                profile: getIt(),
-                authentication: getIt())),
-        ChangeNotifierProvider(create: (context) => MapScreenProvider()),
       ],
       child: MaterialApp(
         title: 'Wizmo',

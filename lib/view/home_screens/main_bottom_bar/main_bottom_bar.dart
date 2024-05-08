@@ -47,9 +47,7 @@ class _MainBottomBarState extends State<MainBottomBar> {
   final page = [
     const HomePage(),
     const SearchScreen(),
-    SellScreen(
-      provider: getIt(),
-    ),
+    const SellScreen(),
     const SaveScreen(),
     const AccountScreen(),
   ];

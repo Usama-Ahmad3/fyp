@@ -24,7 +24,7 @@ class CameraChoice {
             children: [
               ListTile(
                   onTap: () {
-                    provider.pickImageProviderUse(ImageSource.gallery);
+                    provider.pickImage(ImageSource.gallery);
                     Navigator.pop(context);
                   },
                   textColor: AppColors.white,
@@ -38,7 +38,7 @@ class CameraChoice {
                   )),
               ListTile(
                   onTap: () {
-                    provider.pickImageProviderUse(ImageSource.camera);
+                    provider.pickImage(ImageSource.camera);
                     Navigator.pop(context);
                   },
                   trailing: Icon(

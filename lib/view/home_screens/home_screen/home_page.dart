@@ -111,8 +111,7 @@ class HomePageState extends State<HomePage> {
                                             featureName: document['features'],
                                             features:
                                                 document['feature_values'],
-                                            onTap: () {},
-                                            provider: getIt());
+                                            onTap: () {});
                                         Navigation().push(
                                             CarDetailScreen(
                                                 carDetailInitials: detail),
