@@ -39,18 +39,6 @@ class _SearchScreenState extends State<SearchScreen> {
     'y',
     'z'
   ];
-  Future<List> _fetchData(String field) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('sell_car_data').get();
-
-    List values = [];
-    querySnapshot.docs.forEach((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-      values = data[field];
-    });
-
-    return values;
-  }
 
   Future<QuerySnapshot> fetchDataFromFirebase() async {
     return FirebaseFirestore.instance.collection('sell_car_data').get();
@@ -108,6 +96,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: AppColors.buttonColor)),
                   );
                 } else {
+                  print(snapshot.data);
                   return Column(
                     children: [
                       ...List.generate(abc.length, (mainIndex) {
