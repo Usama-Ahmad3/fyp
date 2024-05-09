@@ -2,21 +2,21 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/common_widgets/button_widget.dart';
 import 'package:wizmo/res/common_widgets/text_field_widget.dart';
 import 'package:wizmo/utils/flushbar.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:wizmo/view/login_signup/login/login.dart';
 import 'package:wizmo/view/login_signup/widgets/text_data.dart';
+
 import '../../../res/colors/app_colors.dart';
 
 class SignUp extends StatefulWidget {

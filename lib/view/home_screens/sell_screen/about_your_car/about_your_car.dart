@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/models/sell_car_model.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/button_widget.dart';
@@ -31,7 +30,6 @@ class _AboutYourCarState extends State<AboutYourCar> {
   TextEditingController colorController = TextEditingController();
   TextEditingController doorsController = TextEditingController();
   TextEditingController seatsController = TextEditingController();
-  TextEditingController rangeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Future<List> _fetchData(String field) async {
     QuerySnapshot querySnapshot =
@@ -518,20 +516,6 @@ class _AboutYourCarState extends State<AboutYourCar> {
               SizedBox(
                 height: height * 0.025,
               ),
-              TextFieldWidget(
-                controller: rangeController,
-                hintText: 'Enter your car range',
-                onValidate: (value) {
-                  if (value.isEmpty) {
-                    return "range field can't empty";
-                  }
-                  return null;
-                },
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(height * 0.034),
-                    borderSide: BorderSide(color: AppColors.white)),
-              ),
-              SizedBox(height: height * 0.025),
 
               ButtonWidget(
                   text: 'Continue',
@@ -564,7 +548,6 @@ class _AboutYourCarState extends State<AboutYourCar> {
 
   navigateToDescription() {
     widget.sellCarModel.colour = colorController.text;
-    widget.sellCarModel.range = rangeController.text;
     Navigation().push(
       DescriptionScreen(sellCarModel: widget.sellCarModel),
       context,

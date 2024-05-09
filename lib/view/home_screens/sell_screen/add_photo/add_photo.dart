@@ -1,15 +1,20 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:wizmo/models/sell_car_model.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/button_widget.dart';
 import 'package:wizmo/utils/flushbar.dart';
+import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/sell_screen/app_bar_widget.dart';
+import 'package:wizmo/view/home_screens/sell_screen/congrats_screen/congrats_screen.dart';
+import 'package:wizmo/view/login_signup/widgets/constants.dart';
 
 class AddPhoto extends StatefulWidget {
   final SellCarModel sellCarModel;
@@ -21,6 +26,7 @@ class AddPhoto extends StatefulWidget {
 
 class _AddPhotoState extends State<AddPhoto> {
   List<File>? image = [];
+  bool loading = false;
   pickImage(source) async {
     final XFile? file = await ImagePicker().pickImage(source: source);
     if (file != null) {
@@ -30,6 +36,21 @@ class _AddPhotoState extends State<AddPhoto> {
     } else {
       print('Not Picked');
     }
+  }
+
+  Future _fetchData(String id) async {
+    DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    Map<String, dynamic> userData = {};
+    if (querySnapshot.exists) {
+      userData = querySnapshot.data() as Map<String, dynamic>;
+      print(userData);
+    } else {
+      print('Document does not exist');
+    }
+    return userData;
   }
 
   cameraChoicePicker(size) {
@@ -271,45 +292,82 @@ class _AddPhotoState extends State<AddPhoto> {
                       left: width * 0.075,
                       child: ButtonWidget(
                           text: 'Continue',
-                          onTap: () {
+                          loading: loading,
+                          onTap: () async {
                             if (image!.isNotEmpty) {
-                              Map detail = {
-                                'email': '',
-                                'insurance': widget.sellCarModel.insurance,
-                                'co2': widget.sellCarModel.co2,
-                                'make': widget.sellCarModel.make,
-                                'model': widget.sellCarModel.model,
-                                'modelvariation': widget.sellCarModel.variation,
-                                'year': widget.sellCarModel.year,
-                                'mileage': widget.sellCarModel.mileage,
-                                'bodytype': widget.sellCarModel.bodyType,
-                                'fuletype': widget.sellCarModel.fuelType,
-                                'enginesize': widget.sellCarModel.engineSize,
-                                'enginepower': widget.sellCarModel.enginePower,
-                                'fuelconsumption':
-                                    widget.sellCarModel.consumption,
-                                'acceleration':
-                                    widget.sellCarModel.acceleration,
-                                'gearboxe': widget.sellCarModel.gearBox,
-                                'drivetrain': widget.sellCarModel.driveTrain,
-                                'door': widget.sellCarModel.doors,
-                                'seat': widget.sellCarModel.seats,
-                                'description': widget.sellCarModel.description,
-                                'sellertype': widget.sellCarModel.sellerType,
-                                'tax': widget.sellCarModel.tax,
-                                'location': widget.sellCarModel.location,
-                                "color": widget.sellCarModel.colour,
-                                'longitude': widget.sellCarModel.longitude,
-                                'latitude': widget.sellCarModel.latitude,
-                                'price': widget.sellCarModel.price,
-                                'car_name': widget.sellCarModel.carName,
-                                'co': widget.sellCarModel.co2,
-                                'insurancegroup': widget.sellCarModel.insurance,
-                                'image': image,
-                                'rgistraion': widget.sellCarModel.registration,
-                                'range': widget.sellCarModel.range,
-                                'listFile': true
-                              };
+                              setState(() {
+                                loading = true;
+                              });
+                              List imageLinks = [];
+                              final cars =
+                                  FirebaseFirestore.instance.collection('cars');
+                              final id = FirebaseAuth.instance.currentUser!.uid;
+                              Map<String, dynamic> profile =
+                                  await _fetchData(id);
+                              final ref = firebase_storage
+                                  .FirebaseStorage.instance
+                                  .ref('/cars/$id');
+                              for (var imageIndex in image!) {
+                                firebase_storage.UploadTask uploadTask =
+                                    ref.putFile(File(imageIndex.path));
+                                await Future.value(uploadTask).then((value) {
+                                  loading = false;
+                                  setState(() {});
+                                }).onError((error, stackTrace) {
+                                  loading = false;
+                                  setState(() {});
+                                  FlushBarUtils.flushBar(
+                                      error.toString(), context, "Error");
+                                });
+                                final url = await ref.getDownloadURL();
+                                imageLinks.add(url);
+                              }
+                              cars.doc().set({
+                                'Description': widget.sellCarModel.description,
+                                "Location": widget.sellCarModel.location,
+                                "Price": widget.sellCarModel.price,
+                                "Registration Number":
+                                    widget.sellCarModel.registration,
+                                'Seller Type': widget.sellCarModel.sellerType,
+                                "address": profile['address'],
+                                "email": profile["email"],
+                                'id': id,
+                                'images': imageLinks,
+                                'isSaved': false,
+                                "latitude": widget.sellCarModel.latitude,
+                                "longitude": widget.sellCarModel.longitude,
+                                "make": widget.sellCarModel.make,
+                                "model": widget.sellCarModel.model,
+                                "car_name": widget.sellCarModel.carName,
+                                "name": profile['name'],
+                                "phone_number": profile['phone_number'],
+                                "profile_image": profile['profile_image'],
+                                "features": featureNames,
+                                "feature_values": [
+                                  widget.sellCarModel.make,
+                                  widget.sellCarModel.model,
+                                  widget.sellCarModel.variation,
+                                  widget.sellCarModel.year,
+                                  widget.sellCarModel.bodyType,
+                                  widget.sellCarModel.acceleration,
+                                  widget.sellCarModel.driveTrain,
+                                  widget.sellCarModel.co2,
+                                  widget.sellCarModel.fuelType,
+                                  widget.sellCarModel.consumption,
+                                  widget.sellCarModel.engineSize,
+                                  widget.sellCarModel.enginePower,
+                                  widget.sellCarModel.mileage,
+                                  widget.sellCarModel.gearBox,
+                                  widget.sellCarModel.colour,
+                                  widget.sellCarModel.doors,
+                                  widget.sellCarModel.seats,
+                                  widget.sellCarModel.tax,
+                                  widget.sellCarModel.insurance,
+                                ]
+                              }).then((value) {
+                                Navigation()
+                                    .pushRep(const CongratsScreen(), context);
+                              });
                               if (kDebugMode) {
                                 print("SSSSSSSSSSSSSSSSSSSSS");
                                 print(widget.sellCarModel.description);

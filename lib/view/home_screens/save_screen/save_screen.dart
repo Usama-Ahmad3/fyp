@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/models/dynamic_car_detail_model.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';

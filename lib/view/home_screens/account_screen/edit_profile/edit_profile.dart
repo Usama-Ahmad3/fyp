@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,6 @@ import 'package:wizmo/res/common_widgets/text_field_widget.dart';
 import 'package:wizmo/utils/flushbar.dart';
 import 'package:wizmo/view/home_screens/account_screen/edit_profile/edit_profile_widget.dart';
 import 'package:wizmo/view/login_signup/widgets/text_data.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditProfile extends StatefulWidget {
   final Map profile;

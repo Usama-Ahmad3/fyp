@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/res/authentication/authentication.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/utils/flushbar.dart';
@@ -14,7 +13,6 @@ import 'package:wizmo/view/login_signup/login/login.dart';
 import 'package:wizmo/view/login_signup/signup/signup.dart';
 
 import 'edit_profile/edit_profile.dart';
-import 'view_my_cars/view_my_cars.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({
@@ -160,7 +158,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
                                 ///Account
                                 ...List.generate(
-                                    3,
+                                    icon.length,
                                     (index) => Padding(
                                           padding: EdgeInsets.symmetric(
                                               vertical: height * 0.013,
@@ -205,13 +203,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                                       navigateToEditProfile(
                                                           profile);
                                                     }
-                                                  : index == 1
-                                                      ? () {
-                                                          navigateToMyCars();
-                                                        }
-                                                      : () {
-                                                          navigateToSavedCars();
-                                                        },
+                                                  : () {
+                                                      navigateToSavedCars();
+                                                    },
                                               titleAlignment:
                                                   ListTileTitleAlignment.center,
                                               leading: Icon(
@@ -427,16 +421,12 @@ class _AccountScreenState extends State<AccountScreen> {
     Navigation().pushRep(const LogIn(), context);
   }
 
-  navigateToMyCars() {
-    Navigation().push(ViewMyCars(), context);
-  }
-
   navigateToSavedCars() {
     Navigation().pushRep(MainBottomBar(index: 3), context);
   }
 
-  List icon = [Icons.person, Icons.car_crash_sharp, Icons.favorite];
-  List title = ["Edit Profile", 'View My Cars', "Saved Cars"];
+  List icon = [Icons.person, Icons.favorite];
+  List title = ["Edit Profile", "Saved Cars"];
   List sIcon = [Icons.info_outline, Icons.call];
   List sTitle = ['Help', 'Contact Us'];
   List oIcon = [Icons.logout_outlined, Icons.delete_forever_outlined];

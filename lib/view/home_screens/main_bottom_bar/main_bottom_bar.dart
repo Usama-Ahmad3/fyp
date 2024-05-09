@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/popup.dart';
 import 'package:wizmo/view/home_screens/account_screen/account_screen.dart';

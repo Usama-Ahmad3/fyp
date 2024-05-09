@@ -4,7 +4,6 @@ import 'package:wizmo/models/all_cars_home.dart';
 import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_screen.dart';
-import 'package:wizmo/view/home_screens/search_screen/filter_cars/filter_cars.dart';
 
 class FilterCarProvider extends ChangeNotifier {
   AppRepository appRepository;

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/main.dart';
 import 'package:wizmo/models/dynamic_car_detail_model.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/res/common_widgets/empty_screen.dart';
 import 'package:wizmo/utils/navigator_class.dart';
 import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
 import 'package:wizmo/view/home_screens/home_screen/home_widgets/car_container.dart';
+
 import 'car_detail_screen/car_detail_screen.dart';
 import 'home_widgets/top_searchbar.dart';
 
@@ -83,14 +83,14 @@ class HomePageState extends State<HomePage> {
                                       addCarId: document['id'],
                                       image: document['images'],
                                       price: document['Price'],
-                                      name: document['model'],
+                                      name: document['car_name'],
                                       model: document['model'],
                                       onTap: () {
                                         DynamicCarDetailModel imageDetail =
                                             DynamicCarDetailModel(
                                                 model: document['model'],
                                                 images: document['images'],
-                                                name: document['name'],
+                                                name: document['car_name'],
                                                 saved: document['isSaved'],
                                                 description:
                                                     document['Description'],

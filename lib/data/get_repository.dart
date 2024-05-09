@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart' show BuildContext;
+import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wizmo/domain/app_repository.dart';
-import 'package:http/http.dart' as http;
 import 'package:wizmo/res/exception/exception.dart';
 import 'package:wizmo/utils/flushbar.dart';
 
