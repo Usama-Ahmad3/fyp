@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_widgets.dart';
 
-import 'search_provider.dart';
-
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -158,8 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       [index],
                                                   number:
                                                       'value.carModel.model![index].id.toString()',
-                                                  context: context,
-                                                  onTap: () {})
+                                                  context: context)
                                               : const SizedBox.shrink();
                                         },
                                       ),
