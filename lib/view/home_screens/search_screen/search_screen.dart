@@ -47,7 +47,10 @@ class _SearchScreenState extends State<SearchScreen> {
   searchTitles(List make) {
     for (int i = 0; i < make.length; i++) {
       abc.forEach((element) {
-        if (element.toString().toLowerCase() == make[i].toLowerCase()) {
+        print(make[i]);
+        print(element);
+        if (element.toString().toLowerCase() == make[i][0].toLowerCase()) {
+          print('abmmm');
           ab.add(element);
         }
       });
@@ -132,6 +135,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
+                                          print(
+                                              "object ==> ${document['make'][index]}");
                                           return document['make'][index]
                                                   .toString()
                                                   .toLowerCase()
