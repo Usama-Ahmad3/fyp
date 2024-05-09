@@ -1,6 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wizmo/res/app_urls/app_urls.dart';
 import 'package:wizmo/res/colors/app_colors.dart';
 import 'package:wizmo/view/home_screens/search_screen/search_widgets.dart';
 
@@ -14,19 +13,70 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final String apiUrl =
-      'http://54.173.21.116:8000/api/v1/acadmies/documents/'; // Replace with your API URL
-  final String authToken = 'fd0adfe9f9c26869c3e21e5810f3afbaa6540248';
+  List ab = [];
+  List abc = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'x',
+    'y',
+    'z'
+  ];
+  Future<List> _fetchData(String field) async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('sell_car_data').get();
+
+    List values = [];
+    querySnapshot.docs.forEach((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      values = data[field];
+    });
+
+    return values;
+  }
+
+  Future<QuerySnapshot> fetchDataFromFirebase() async {
+    return FirebaseFirestore.instance.collection('sell_car_data').get();
+  }
+
+  searchTitles(List make) {
+    for (int i = 0; i < make.length; i++) {
+      abc.forEach((element) {
+        if (element.toString().toLowerCase() == make[i].toLowerCase()) {
+          ab.add(element);
+        }
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final provider = Provider.of<SearchProvider>(context, listen: false);
-    provider.getModel(
-        loginDetails: null,
-        url: '${AppUrls.baseUrl}${AppUrls.carModel}',
-        context: context);
     return Scaffold(
         body: SafeArea(
       child: SingleChildScrollView(
@@ -45,20 +95,28 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          Consumer<SearchProvider>(
-            builder: (context, value, child) => value.loading
-                ? SizedBox(
+          FutureBuilder(
+            future: fetchDataFromFirebase(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (!snapshot.hasData) {
+                  return const Text('Something Went Wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
                     height: height * 0.4,
                     child: Center(
                         child: CircularProgressIndicator(
                             color: AppColors.buttonColor)),
-                  )
-                : Column(
+                  );
+                } else {
+                  return Column(
                     children: [
-                      ...List.generate(value.abc.length, (mainIndex) {
-                        value.searchTitles();
-                        return value.ab.toString().toLowerCase().contains(
-                                value.abc[mainIndex].toString().toLowerCase())
+                      ...List.generate(abc.length, (mainIndex) {
+                        var document = snapshot.data!.docs[0];
+                        searchTitles(document["make"]);
+                        return ab.toString().toLowerCase().contains(
+                                abc[mainIndex].toString().toLowerCase())
                             ? LayoutBuilder(
                                 builder: (context, constraints) =>
                                     ConstrainedBox(
@@ -74,7 +132,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         child: Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
-                                            value.abc[mainIndex],
+                                            abc[mainIndex],
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline2,
@@ -82,56 +140,50 @@ class _SearchScreenState extends State<SearchScreen> {
                                         ),
                                       ),
                                       ListView.builder(
-                                        itemCount: value.carModel.model!.length,
+                                        itemCount: document['make'].length,
                                         shrinkWrap: true,
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          return value
-                                                  .carModel.model![index].model
+                                          return document['make'][index]
                                                   .toString()
                                                   .toLowerCase()
-                                                  .startsWith(value
-                                                      .abc[mainIndex]
+                                                  .startsWith(abc[mainIndex]
                                                       .toString()
                                                       .toLowerCase())
                                               ? searchWidget(
                                                   width: width,
                                                   height: height,
-                                                  modelName: value.carModel
-                                                      .model![index].model
-                                                      .toString(),
-                                                  number: value
-                                                      .carModel.model![index].id
-                                                      .toString(),
+                                                  modelName: document['make']
+                                                      [index],
+                                                  number:
+                                                      'value.carModel.model![index].id.toString()',
                                                   context: context,
-                                                  onTap: () {
-                                                    value
-                                                        .navigateToFilterScreen(
-                                                            model: value
-                                                                .carModel
-                                                                .model![index]
-                                                                .model
-                                                                .toString(),
-                                                            context: context,
-                                                            title: value
-                                                                .carModel
-                                                                .model![index]
-                                                                .model
-                                                                .toString());
-                                                  })
-                                              : SizedBox.shrink();
+                                                  onTap: () {})
+                                              : const SizedBox.shrink();
                                         },
                                       ),
                                     ],
                                   ),
                                 ),
                               )
-                            : SizedBox.shrink();
+                            : const SizedBox.shrink();
                       }),
                     ],
+                  );
+                }
+              } else {
+                return SizedBox(
+                  height: height * 0.4,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.buttonColor,
+                    ),
                   ),
-          )
+                );
+              }
+            },
+          ),
         ]),
       ),
     ));

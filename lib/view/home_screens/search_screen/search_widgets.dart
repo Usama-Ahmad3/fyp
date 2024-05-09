@@ -40,7 +40,7 @@ Widget searchWidget(
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      number,
+                      'number',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],
