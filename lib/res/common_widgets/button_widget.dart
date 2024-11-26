@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 class ButtonWidget extends StatefulWidget {
- final VoidCallback onTap;
- final String text;
- final bool loading;
+  final VoidCallback onTap;
+  final String text;
+  final bool loading;
   const ButtonWidget(
       {super.key,
       required this.text,
@@ -45,7 +45,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
                     widget.text,
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.white),
                   )),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:wizmo/models/dynamic_car_detail_model.dart';
+import 'package:maintenance/models/dynamic_car_detail_model.dart';
 
 class CarDetailInitials {
   DynamicCarDetailModel carDetails;

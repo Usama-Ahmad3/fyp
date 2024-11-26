@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/cashed_image.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
 
 class EditProfileWidget extends StatelessWidget {
   final String name;
@@ -57,14 +57,14 @@ class EditProfileWidget extends StatelessWidget {
                   ),
                   Text(
                     name,
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   SizedBox(
                     height: height * 0.01,
                   ),
                   Text(
                     location,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.titleSmall,
                   )
                 ],
               ),

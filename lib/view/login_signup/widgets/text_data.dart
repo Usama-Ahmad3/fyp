@@ -13,7 +13,7 @@ class TextData extends StatelessWidget {
           horizontal: width * 0.07, vertical: height * 0.008),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.headline4,
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 popup({required context, required text, required onTap, required buttonText}) {
   return showDialog(

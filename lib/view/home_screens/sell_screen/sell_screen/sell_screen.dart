@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/models/sell_car_model.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/res/common_widgets/text_field_widget.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/sell_screen/about_your_car/about_your_car.dart';
-import 'package:wizmo/view/home_screens/sell_screen/app_bar_widget.dart';
+import 'package:maintenance/models/sell_car_model.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/res/common_widgets/text_field_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/sell_screen/about_your_car/about_your_car.dart';
+import 'package:maintenance/view/home_screens/sell_screen/app_bar_widget.dart';
 
 import 'map_screen/map_screen.dart';
 
@@ -120,7 +120,7 @@ class _SellScreenState extends State<SellScreen> {
           'Select $title',
           style: Theme.of(context)
               .textTheme
-              .headline2!
+              .titleMedium!
               .copyWith(color: AppColors.white),
         ),
         elevation: 5,
@@ -201,13 +201,13 @@ class _SellScreenState extends State<SellScreen> {
                                         list[index],
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline3!
+                                            .titleSmall!
                                             .copyWith(color: AppColors.white),
                                       ),
                                       Text('tap to select',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4!
+                                              .bodyLarge!
                                               .copyWith(
                                                   color: AppColors.white)),
                                     ],

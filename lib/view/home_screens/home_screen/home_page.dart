@@ -1,14 +1,16 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/models/dynamic_car_detail_model.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/empty_screen.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
-import 'package:wizmo/view/home_screens/home_screen/home_widgets/car_container.dart';
+import 'package:maintenance/models/dynamic_car_detail_model.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/empty_screen.dart';
+import 'package:maintenance/utils/images.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/specific_category_services.dart';
 
-import 'car_detail_screen/car_detail_screen.dart';
-import 'home_widgets/top_searchbar.dart';
+import 'specific_category_services/car_detail_screen/car_detail_initials.dart';
+import 'specific_category_services/car_detail_screen/car_detail_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,9 +21,19 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   Future<QuerySnapshot> fetchDataFromFirebase() async {
-    return FirebaseFirestore.instance.collection('cars').get();
+    return FirebaseFirestore.instance.collection('categories').get();
   }
 
+  final List<String> carouselImageList = [
+    AppImages.image0,
+    AppImages.image1,
+    AppImages.image2,
+    AppImages.image3,
+    AppImages.image4,
+    AppImages.image5,
+    AppImages.image6,
+    AppImages.image7,
+  ];
   static bool loading = false;
   @override
   void initState() {
@@ -33,6 +45,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    fetchDataFromFirebase();
     return RefreshIndicator(
         displacement: 200,
         onRefresh: () async {
@@ -49,8 +62,50 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SafeArea(child: Image.asset('assets/images/wizmo.jpg')),
-                      const TopSearchBar(),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      SafeArea(
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            height: height * 0.2,
+                            enlargeCenterPage: true,
+                            autoPlay: true,
+                            aspectRatio: 16 / 9,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enableInfiniteScroll: true,
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            viewportFraction: 0.8,
+                          ),
+                          items: carouselImageList
+                              .map((item) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Center(
+                                      child: Image.asset(
+                                        item,
+                                        fit: BoxFit.cover,
+                                        width: 1000,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.04, vertical: height * 0.008),
+                        child: Text(
+                          'Categories',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: AppColors.black),
+                        ),
+                      ),
                       FutureBuilder(
                         future: fetchDataFromFirebase(),
                         builder: (context, snapshot) {
@@ -60,9 +115,7 @@ class HomePageState extends State<HomePage> {
                               return Padding(
                                 padding: EdgeInsets.only(top: height * 0.02),
                                 child: EmptyScreen(
-                                    text: 'No cars found',
-                                    text2:
-                                        'Go to sell tab and add your first car'),
+                                    text: 'No Data Found', text2: ''),
                               );
                             }
                             if (snapshot.connectionState ==
@@ -79,42 +132,16 @@ class HomePageState extends State<HomePage> {
                                   ...List.generate(snapshot.data!.docs.length,
                                       (index) {
                                     var document = snapshot.data!.docs[index];
-                                    return CarContainer(
-                                      addCarId: document['id'],
+                                    return CategoryContainer(
                                       image: document['images'],
-                                      price: document['Price'],
-                                      name: document['car_name'],
-                                      model: document['model'],
+                                      category: document['name'],
+                                      services:
+                                          document['images'].length.toString(),
                                       onTap: () {
-                                        DynamicCarDetailModel imageDetail =
-                                            DynamicCarDetailModel(
-                                                model: document['model'],
-                                                images: document['images'],
-                                                name: document['car_name'],
-                                                saved: document['isSaved'],
-                                                description:
-                                                    document['Description'],
-                                                location: document["Location"],
-                                                sellerType:
-                                                    document['Seller Type'],
-                                                addCarId: document['id'],
-                                                longitude:
-                                                    document["longitude"],
-                                                latitude: document["latitude"],
-                                                email: document['email'],
-                                                number:
-                                                    document['phone_number'],
-                                                sellerName: document['name'],
-                                                price: document['Price']);
-                                        var detail = CarDetailInitials(
-                                            carDetails: imageDetail,
-                                            featureName: document['features'],
-                                            features:
-                                                document['feature_values'],
-                                            onTap: () {});
+                                        print(document['id']);
                                         Navigation().push(
-                                            CarDetailScreen(
-                                                carDetailInitials: detail),
+                                            SpecificCategoryServices(
+                                                id: document['id']),
                                             context);
                                       },
                                     );

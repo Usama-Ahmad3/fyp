@@ -25,11 +25,11 @@ class EmptyScreen extends StatelessWidget {
         SizedBox(
           height: height * 0.02,
         ),
-        Text(text, style: Theme.of(context).textTheme.headline2),
+        Text(text, style: Theme.of(context).textTheme.titleMedium),
         SizedBox(
           height: height * 0.01,
         ),
-        Text(text2, style: Theme.of(context).textTheme.headline3),
+        Text(text2, style: Theme.of(context).textTheme.titleSmall),
       ],
     );
   }

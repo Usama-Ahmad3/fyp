@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wizmo/res/authentication/authentication.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/login_signup/login/login.dart';
-import 'package:wizmo/view/onboarding/second.dart';
+import 'package:maintenance/res/authentication/authentication.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/login_signup/login/login.dart';
+import 'package:maintenance/view/onboarding/second.dart';
 
 import 'first.dart';
 import 'third.dart';
@@ -105,7 +104,7 @@ class _MainOnBoardingState extends State<MainOnBoarding> {
                           'Skip',
                           style: Theme.of(context)
                               .textTheme
-                              .headline3!
+                              .titleSmall!
                               .copyWith(color: AppColors.black),
                         )),
                   )),

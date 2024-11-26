@@ -7,14 +7,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wizmo/models/sell_car_model.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/sell_screen/app_bar_widget.dart';
-import 'package:wizmo/view/home_screens/sell_screen/congrats_screen/congrats_screen.dart';
-import 'package:wizmo/view/login_signup/widgets/constants.dart';
+import 'package:maintenance/models/sell_car_model.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/sell_screen/app_bar_widget.dart';
+import 'package:maintenance/view/home_screens/sell_screen/congrats_screen/congrats_screen.dart';
+import 'package:maintenance/view/login_signup/widgets/constants.dart';
 
 class AddPhoto extends StatefulWidget {
   final SellCarModel sellCarModel;
@@ -61,7 +61,7 @@ class _AddPhotoState extends State<AddPhoto> {
           'Select Choice',
           style: Theme.of(context)
               .textTheme
-              .headline2!
+              .titleMedium!
               .copyWith(color: AppColors.white),
         ),
         elevation: 5,
@@ -83,7 +83,7 @@ class _AddPhotoState extends State<AddPhoto> {
                     'Pick From Gallery',
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.white),
                   )),
               ListTile(
@@ -99,7 +99,7 @@ class _AddPhotoState extends State<AddPhoto> {
                     'Capture From Camera',
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.white),
                   ))
             ],

@@ -1,4 +1,4 @@
-import 'package:wizmo/models/sell_car_model.dart';
+import 'package:maintenance/models/sell_car_model.dart';
 
 String descriptionTemplate(SellCarModel carModel) {
   return "Introducing the ${carModel.year} ${carModel.model} ${carModel.variation}: A ${carModel.bodyType} for Your Every Adventure"

@@ -6,12 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/res/common_widgets/text_field_widget.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/view/home_screens/account_screen/edit_profile/edit_profile_widget.dart';
-import 'package:wizmo/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/res/common_widgets/text_field_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/view/home_screens/account_screen/edit_profile/edit_profile_widget.dart';
+import 'package:maintenance/view/login_signup/widgets/text_data.dart';
 
 class EditProfile extends StatefulWidget {
   final Map profile;
@@ -26,6 +26,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController roleController = TextEditingController();
   bool loading = false;
   Future<DateTime?> slecteDtateTime(BuildContext context) => showDatePicker(
         context: context,
@@ -62,6 +63,7 @@ class _EditProfileState extends State<EditProfile> {
     emailController.text = widget.profile['email'];
     phoneController.text = widget.profile['phone_number'];
     dobController.text = widget.profile['date_of_birth'];
+    roleController.text = widget.profile['role'];
     super.initState();
   }
 
@@ -166,6 +168,25 @@ class _EditProfileState extends State<EditProfile> {
                       borderRadius: BorderRadius.circular(height * 0.034),
                       borderSide: BorderSide(color: AppColors.white)),
                 ),
+              ),
+              SizedBox(
+                height: height * 0.01,
+              ),
+              const TextData(text: 'Role'),
+              TextFieldWidget(
+                controller: roleController,
+                hintText: 'Role',
+                prefixIcon: Icons.person,
+                enable: false,
+                onValidate: (value) {
+                  if (value.isEmpty) {
+                    return "Date of Birth field can't empty";
+                  }
+                  return null;
+                },
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(height * 0.034),
+                    borderSide: BorderSide(color: AppColors.white)),
               ),
               SizedBox(
                 height: height * 0.05,

@@ -1,4 +1,4 @@
-package com.usama.wizmo
+package com.usama.fyp
 
 import io.flutter.embedding.android.FlutterActivity
 

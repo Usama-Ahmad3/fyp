@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/common_widgets/cashed_image.dart';
-import 'package:wizmo/view/onboarding/onboarding_widgets.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
+import 'package:maintenance/view/onboarding/onboarding_widgets.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});

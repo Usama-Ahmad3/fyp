@@ -1,17 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/models/dynamic_car_detail_model.dart';
-import 'package:wizmo/res/authentication/authentication.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/cashed_image.dart';
-import 'package:wizmo/res/common_widgets/empty_screen.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/account_screen/empty.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_screen.dart';
-import 'package:wizmo/view/login_signup/login/login.dart';
-import 'package:wizmo/view/login_signup/signup/signup.dart';
+import 'package:maintenance/models/dynamic_car_detail_model.dart';
+import 'package:maintenance/res/authentication/authentication.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
+import 'package:maintenance/res/common_widgets/empty_screen.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/account_screen/empty.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/car_detail_initials.dart';
+import 'package:maintenance/view/login_signup/login/login.dart';
+import 'package:maintenance/view/login_signup/signup/signup.dart';
 
 class SaveScreen extends StatefulWidget {
   const SaveScreen({super.key});
@@ -23,7 +22,7 @@ class SaveScreen extends StatefulWidget {
 class _SaveScreenState extends State<SaveScreen> {
   bool loading = false;
   bool isLogIn = false;
-  final nextPageController = CarouselController();
+  final nextPageController = CarouselSliderController();
   int _initialPage = 0;
   checkAuth() async {
     isLogIn = await Authentication().getAuth();
@@ -67,7 +66,7 @@ class _SaveScreenState extends State<SaveScreen> {
                   'Saved',
                   style: Theme.of(context)
                       .textTheme
-                      .headline2!
+                      .titleMedium!
                       .copyWith(color: AppColors.black),
                 ),
                 centerTitle: true,
@@ -233,7 +232,7 @@ class _SaveScreenState extends State<SaveScreen> {
                                                       : document['model'],
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3!
+                                                      .titleSmall!
                                                       .copyWith(
                                                           color:
                                                               AppColors.black,
@@ -244,7 +243,7 @@ class _SaveScreenState extends State<SaveScreen> {
                                                   '${document['Price']} \$',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3!
+                                                      .titleSmall!
                                                       .copyWith(
                                                           color: AppColors.red),
                                                 ),
@@ -269,7 +268,7 @@ class _SaveScreenState extends State<SaveScreen> {
                                                 document['model'],
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline4!
+                                                    .bodyLarge!
                                                     .copyWith(
                                                         color: AppColors.white),
                                               )),
@@ -343,7 +342,7 @@ class _SaveScreenState extends State<SaveScreen> {
   }
 
   navigateToCarDetail(var carDetailInitials, context) {
-    Navigation()
-        .push(CarDetailScreen(carDetailInitials: carDetailInitials), context);
+    // Navigation()
+    //     .push(CarDetailScreen(carDetailInitials: carDetailInitials), context);
   }
 }

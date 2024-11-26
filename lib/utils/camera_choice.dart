@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 class CameraChoice {
   cameraChoicePicker(context, size, provider) {
@@ -11,7 +11,7 @@ class CameraChoice {
           'Select Choice',
           style: Theme.of(context)
               .textTheme
-              .headline2!
+              .titleMedium!
               .copyWith(color: AppColors.white),
         ),
         elevation: 5,
@@ -33,7 +33,7 @@ class CameraChoice {
                     'Pick From Gallery',
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.white),
                   )),
               ListTile(
@@ -49,7 +49,7 @@ class CameraChoice {
                     'Capture From Camera',
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.white),
                   ))
             ],

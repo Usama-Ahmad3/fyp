@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 // ignore: must_be_immutable
 class TextFieldWidget extends StatefulWidget {
@@ -84,7 +84,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           enabled: widget.enable,
           onTap: widget.onTap,
           keyboardType: widget.type,
-          style: Theme.of(context).textTheme.headline2!.copyWith(
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
               fontSize: widget.controller.text.length > 8 ? 14 : 16,
               color: AppColors.black),
           cursorColor: AppColors.black,
@@ -214,7 +214,7 @@ class _TextFieldMultiWidgetState extends State<TextFieldMultiWidget> {
           maxLines: widget.maxLine,
           style: Theme.of(context)
               .textTheme
-              .headline2!
+              .titleMedium!
               .copyWith(fontSize: 16, color: AppColors.black),
           cursorColor: AppColors.black,
           clipBehavior: Clip.antiAliasWithSaveLayer,

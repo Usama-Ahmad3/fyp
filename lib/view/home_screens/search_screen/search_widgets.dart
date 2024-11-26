@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 Widget searchWidget(
     {required double width,
@@ -34,11 +34,11 @@ Widget searchWidget(
                 children: [
                   Text(
                     modelName,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                   Text(
                     'number',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ],
               ),
@@ -57,7 +57,7 @@ Widget searchText(String text, double width, BuildContext context) {
       alignment: Alignment.topLeft,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.headline2,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     ),
   );

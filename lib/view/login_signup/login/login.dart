@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/authentication/authentication.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/res/common_widgets/cashed_image.dart';
-import 'package:wizmo/res/common_widgets/text_field_widget.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
-import 'package:wizmo/view/login_signup/forget_password/forget_password.dart';
-import 'package:wizmo/view/login_signup/signup/signup.dart';
-import 'package:wizmo/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/res/authentication/authentication.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
+import 'package:maintenance/res/common_widgets/text_field_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
+import 'package:maintenance/view/login_signup/forget_password/forget_password.dart';
+import 'package:maintenance/view/login_signup/signup/signup.dart';
+import 'package:maintenance/view/login_signup/widgets/text_data.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -62,7 +62,7 @@ class _LogInState extends State<LogIn> {
                 Center(
                   child: Text(
                     'Sign in to your account',
-                    style: Theme.of(context).textTheme.headline2!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.bold, color: AppColors.black),
                   ),
                 ),
@@ -167,7 +167,7 @@ class _LogInState extends State<LogIn> {
                   child: Center(
                       child: Text(
                     'Forget password',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   )),
                 ),
                 SizedBox(
@@ -178,7 +178,7 @@ class _LogInState extends State<LogIn> {
                   children: [
                     Text(
                       "Don't have account? ",
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     InkWell(
                       onTap: () {
@@ -189,7 +189,7 @@ class _LogInState extends State<LogIn> {
                         "Sign Up",
                         style: Theme.of(context)
                             .textTheme
-                            .headline3!
+                            .titleSmall!
                             .copyWith(color: AppColors.red),
                       ),
                     ),

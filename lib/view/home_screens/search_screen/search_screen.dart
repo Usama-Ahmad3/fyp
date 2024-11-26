@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/view/home_screens/search_screen/search_widgets.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/view/home_screens/search_screen/search_widgets.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -79,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Text('Filter Search',
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.black)),
               ],
             ),
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                             abc[mainIndex],
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline2,
+                                                .titleMedium,
                                           ),
                                         ),
                                       ),

@@ -1,34 +1,16 @@
 {
   "project_info": {
     "project_number": "834754885651",
+    "firebase_url": "https://sideproject-667c3-default-rtdb.firebaseio.com",
     "project_id": "sideproject-667c3",
     "storage_bucket": "sideproject-667c3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:834754885651:android:95b67cd0b6e9c47fcb27e6",
+        "mobilesdk_app_id": "1:834754885651:android:cb48eba244d41d41cb27e6",
         "android_client_info": {
-          "package_name": "com.usama.side_project"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBg3H8XGI3JiGNwUiuOj0fsrpYHuSv9dXU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:834754885651:android:f9097b98284f1786cb27e6",
-        "android_client_info": {
-          "package_name": "com.usama.wizmo"
+          "package_name": "com.usama.fyp"
         }
       },
       "oauth_client": [],

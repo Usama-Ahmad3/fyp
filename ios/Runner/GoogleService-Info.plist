@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC0-YofnEbmYazMicyjB2wm0U8DNCd4aHM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>834754885651</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.wizmo</string>
+	<key>PROJECT_ID</key>
+	<string>sideproject-667c3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sideproject-667c3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:834754885651:ios:c06dd30e533fb5f6cb27e6</string>
+	<key>DATABASE_URL</key>
+	<string>https://sideproject-667c3-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

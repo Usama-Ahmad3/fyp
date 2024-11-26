@@ -1,30 +1,28 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
-class CarContainer extends StatefulWidget {
+class CategoryContainer extends StatefulWidget {
   final List image;
-  final String price;
-  final String model;
-  final String name;
-  final String addCarId;
+  final String services;
+  final String category;
+  final bool isCompany;
   final VoidCallback onTap;
-  const CarContainer(
+  const CategoryContainer(
       {super.key,
       required this.image,
-      required this.price,
-      required this.addCarId,
-      required this.name,
+      required this.services,
+      this.isCompany = false,
       required this.onTap,
-      required this.model});
+      required this.category});
 
   @override
-  State<CarContainer> createState() => _CarContainerState();
+  State<CategoryContainer> createState() => _CategoryContainerState();
 }
 
-class _CarContainerState extends State<CarContainer> {
-  final nextPageController = CarouselController();
+class _CategoryContainerState extends State<CategoryContainer> {
+  final nextPageController = CarouselSliderController();
   int _initialPage = 0;
   @override
   Widget build(BuildContext context) {
@@ -93,17 +91,15 @@ class _CarContainerState extends State<CarContainer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.name.length > 10
-                        ? widget.name.substring(0, 10)
-                        : widget.name,
-                    style: Theme.of(context).textTheme.headline3!.copyWith(
+                    widget.isCompany ? "Company Name" : "Service Providers",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.black, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${widget.price} \$',
+                    widget.services.isEmpty ? "Not Specified" : widget.services,
                     style: Theme.of(context)
                         .textTheme
-                        .headline3!
+                        .titleSmall!
                         .copyWith(color: AppColors.red),
                   ),
                 ],
@@ -111,72 +107,25 @@ class _CarContainerState extends State<CarContainer> {
             ),
             Positioned(
               top: height * 0.01,
-              left: width * 0.03,
+              left: width * 0.01,
               child: Container(
-                height: height * 0.03,
-                width: width * 0.17,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(height * 0.008),
                     color: AppColors.grey.withOpacity(0.65),
                     shape: BoxShape.rectangle),
                 child: Center(
-                    child: Text(
-                  widget.model,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4!
-                      .copyWith(color: AppColors.white),
+                    child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: Text(
+                    widget.category,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: AppColors.white),
+                  ),
                 )),
               ),
             ),
-            Positioned(
-                right: width * 0.02,
-                top: height * 0.009,
-                child: StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('cars')
-                      .doc(widget.addCarId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox.shrink();
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return const Center(
-                          child: Text('Document does not exist'));
-                    } else {
-                      var car = snapshot.data!.data()! as Map<String, dynamic>;
-                      return CircleAvatar(
-                        backgroundColor: AppColors.grey.withOpacity(0.65),
-                        radius: height * 0.021,
-                        child: InkWell(
-                          onTap: () async {
-                            try {
-                              await FirebaseFirestore.instance
-                                  .collection('cars')
-                                  .doc(widget.addCarId)
-                                  .update({"isSaved": !car['isSaved']}).then(
-                                      (value) {
-                                setState(() {
-                                  print("djjdjdj");
-                                });
-                              });
-                            } catch (e) {
-                              print("djjdjdj ==> Error $e");
-                            }
-                          },
-                          child: Icon(
-                            car['isSaved'] ? Icons.star : Icons.star_border,
-                            color: car['isSaved']
-                                ? AppColors.blue
-                                : AppColors.white,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                )),
           ],
         ),
       ),
@@ -196,7 +145,7 @@ Widget TextWidget(
       text,
       style: Theme.of(context)
           .textTheme
-          .headline4!
+          .bodyLarge!
           .copyWith(color: AppColors.black, fontWeight: FontWeight.bold),
     ),
   );

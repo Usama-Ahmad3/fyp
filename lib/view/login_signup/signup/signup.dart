@@ -8,14 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wizmo/res/authentication/authentication.dart';
-import 'package:wizmo/res/common_widgets/button_widget.dart';
-import 'package:wizmo/res/common_widgets/text_field_widget.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
-import 'package:wizmo/view/login_signup/login/login.dart';
-import 'package:wizmo/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/main.dart';
+import 'package:maintenance/res/authentication/authentication.dart';
+import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/res/common_widgets/text_field_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
+import 'package:maintenance/view/login_signup/login/login.dart';
+import 'package:maintenance/view/login_signup/widgets/text_data.dart';
 
 import '../../../res/colors/app_colors.dart';
 
@@ -36,6 +37,8 @@ class _SignUpState extends State<SignUp> {
   var licenseController = TextEditingController();
   var idCardController = TextEditingController();
   var dobController = TextEditingController();
+  String? _role;
+  final roleUser = ['User', "Seller"];
   bool _obscure = true;
   bool loading = false;
   File? _image;
@@ -96,7 +99,7 @@ class _SignUpState extends State<SignUp> {
               Center(
                 child: Text(
                   'Get started now with Wizmo',
-                  style: Theme.of(context).textTheme.headline2!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold, color: AppColors.black),
                 ),
               ),
@@ -189,9 +192,6 @@ class _SignUpState extends State<SignUp> {
                 hintText: 'Enter Contact Number',
                 prefixIcon: Icons.contacts,
                 onTap: () {},
-                onChanged: (value) {
-                  // return provider.test();
-                },
                 onValidate: (value) {
                   if (value.isEmpty) {
                     return "Contact field can't be empty";
@@ -300,6 +300,41 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               SizedBox(
+                height: height * 0.02,
+              ),
+              const TextData(text: 'Role'),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width * 0.07),
+                child: DropdownButton<String>(
+                  iconEnabledColor: const Color(0XFF9B9B9B),
+                  focusColor: const Color(0XFF9B9B9B),
+                  isExpanded: true,
+                  value: _role,
+                  hint: Text(
+                    "Role",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  items: roleUser
+                      .map((value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: AppColors.black),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _role = value!;
+                      print(value);
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
                 height: height * 0.04,
               ),
               Center(
@@ -328,7 +363,7 @@ class _SignUpState extends State<SignUp> {
                                       'Select Choice',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline2!
+                                          .titleMedium!
                                           .copyWith(color: AppColors.white),
                                     ),
                                     elevation: 5,
@@ -354,7 +389,7 @@ class _SignUpState extends State<SignUp> {
                                                 'Pick From Gallery',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3!
+                                                    .titleSmall!
                                                     .copyWith(
                                                         color: AppColors.white),
                                               )),
@@ -372,7 +407,7 @@ class _SignUpState extends State<SignUp> {
                                                 'Capture From Camera',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3!
+                                                    .titleSmall!
                                                     .copyWith(
                                                         color: AppColors.white),
                                               ))
@@ -441,7 +476,8 @@ class _SignUpState extends State<SignUp> {
                           'driver_license': licenseController.text,
                           'id_card': idCardController.text,
                           'profile_image': url,
-                          'id': id
+                          'id': id,
+                          'role': _role
                         });
                         await Authentication().saveLogin(true);
 
@@ -465,23 +501,23 @@ class _SignUpState extends State<SignUp> {
                     text: TextSpan(children: [
                       TextSpan(
                           text: 'By signing up you accept the',
-                          style: Theme.of(context).textTheme.headline4),
+                          style: Theme.of(context).textTheme.bodyLarge),
                       TextSpan(
                           recognizer: TapGestureRecognizer()..onTap = () {},
                           text: 'Terms of Services',
                           style: Theme.of(context)
                               .textTheme
-                              .headline4!
+                              .bodyLarge!
                               .copyWith(color: AppColors.buttonColor)),
                       TextSpan(
                           text: '\nand ',
-                          style: Theme.of(context).textTheme.headline4),
+                          style: Theme.of(context).textTheme.bodyLarge),
                       TextSpan(
                           recognizer: TapGestureRecognizer()..onTap = () {},
                           text: 'Privacy Policy',
                           style: Theme.of(context)
                               .textTheme
-                              .headline4!
+                              .bodyLarge!
                               .copyWith(color: AppColors.buttonColor))
                     ])),
               ),
@@ -497,7 +533,7 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     Text(
                       "Already have account? ",
-                      style: Theme.of(context).textTheme.headline3,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                     InkWell(
                       onTap: () {
@@ -507,7 +543,7 @@ class _SignUpState extends State<SignUp> {
                         "LogIn",
                         style: Theme.of(context)
                             .textTheme
-                            .headline3!
+                            .titleSmall!
                             .copyWith(color: AppColors.red),
                       ),
                     ),

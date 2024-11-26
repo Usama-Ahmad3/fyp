@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:story/story.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/cashed_image.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
 
 class StoryPage extends StatelessWidget {
   final List<dynamic> files;

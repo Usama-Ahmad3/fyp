@@ -4,21 +4,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
-import 'package:wizmo/res/authentication/authentication.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/res/common_widgets/popup.dart';
-import 'package:wizmo/utils/flushbar.dart';
-import 'package:wizmo/utils/navigator_class.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/car_detail_initials.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/story_page.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/widgets/features_car_detail.dart';
-import 'package:wizmo/view/home_screens/home_screen/car_detail_screen/widgets/profile_car_detail.dart';
-import 'package:wizmo/view/home_screens/home_screen/home_widgets/car_container.dart';
-import 'package:wizmo/view/login_signup/login/login.dart';
+import 'package:maintenance/res/authentication/authentication.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/res/common_widgets/popup.dart';
+import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
+import 'package:maintenance/view/login_signup/login/login.dart';
+
+import 'widgets/profile_car_detail.dart';
 
 class CarDetailScreen extends StatefulWidget {
-  final CarDetailInitials carDetailInitials;
-  const CarDetailScreen({super.key, required this.carDetailInitials});
+  final Map userData;
+  final Map serviceData;
+  const CarDetailScreen(
+      {super.key, required this.userData, required this.serviceData});
 
   @override
   State<CarDetailScreen> createState() => DetailScreenState();
@@ -28,11 +28,6 @@ class DetailScreenState extends State<CarDetailScreen> {
   bool _isLogIn = false;
   bool loading = true;
   var isDialOpen = ValueNotifier<bool>(false);
-  checkAuth() async {
-    _isLogIn = await Authentication().getAuth();
-    loading = false;
-    setState(() {});
-  }
 
   Future<void> makePhoneCall(String url, context) async {
     try {
@@ -80,6 +75,12 @@ class DetailScreenState extends State<CarDetailScreen> {
     super.initState();
   }
 
+  checkAuth() async {
+    _isLogIn = await Authentication().getAuth();
+    loading = false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -90,7 +91,14 @@ class DetailScreenState extends State<CarDetailScreen> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: const Text('Car Details'),
+              title: Text(
+                'Service Details',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: AppColors.black),
+              ),
+              centerTitle: true,
             ),
             floatingActionButton: SpeedDial(
               elevation: 3,
@@ -98,7 +106,7 @@ class DetailScreenState extends State<CarDetailScreen> {
                 'Message Seller',
                 style: Theme.of(context)
                     .textTheme
-                    .headline4!
+                    .bodyLarge!
                     .copyWith(color: AppColors.white),
               ),
               animationCurve: Curves.easeInOutCirc,
@@ -123,8 +131,7 @@ class DetailScreenState extends State<CarDetailScreen> {
                       print("WhatsApp");
                       final link = WhatsAppUnilink(
                           text: 'hi! how are you',
-                          phoneNumber:
-                              widget.carDetailInitials.carDetails.number);
+                          phoneNumber: widget.userData['phone_number']);
                       _isLogIn
                           ? launchInBrowser("$link", context)
                           : popupDialog(
@@ -136,15 +143,14 @@ class DetailScreenState extends State<CarDetailScreen> {
                       FontAwesomeIcons.whatsapp,
                     ),
                     label: 'WhatsApp',
-                    labelStyle: Theme.of(context).textTheme.headline3,
+                    labelStyle: Theme.of(context).textTheme.titleSmall,
                     elevation: 3),
                 SpeedDialChild(
                     onTap: () {
                       print("Email");
                       _isLogIn
                           ? launchInBrowser(
-                              'mailto:${widget.carDetailInitials.carDetails.email}',
-                              context)
+                              'mailto:${widget.userData['email']}', context)
                           : popupDialog(
                               context: context,
                               text: 'Login required',
@@ -154,14 +160,14 @@ class DetailScreenState extends State<CarDetailScreen> {
                       Icons.email_outlined,
                     ),
                     label: 'Email',
-                    labelStyle: Theme.of(context).textTheme.headline3,
+                    labelStyle: Theme.of(context).textTheme.titleSmall,
                     elevation: 3),
                 SpeedDialChild(
                     onTap: () {
                       print('phone');
                       _isLogIn
                           ? makePhoneCall(
-                              'tel:${widget.carDetailInitials.carDetails.number}',
+                              'tel: ${widget.userData['phone_number']}',
                               context)
                           : popupDialog(
                               context: context,
@@ -172,7 +178,7 @@ class DetailScreenState extends State<CarDetailScreen> {
                       Icons.phone,
                     ),
                     label: 'Phone',
-                    labelStyle: Theme.of(context).textTheme.headline3,
+                    labelStyle: Theme.of(context).textTheme.titleSmall,
                     elevation: 3),
               ],
               activeChild: Icon(
@@ -190,16 +196,17 @@ class DetailScreenState extends State<CarDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CarContainer(
-                    addCarId:
-                        widget.carDetailInitials.carDetails.addCarId.toString(),
+                  CategoryContainer(
                     onTap: () {
                       navigateToStory();
                     },
-                    model: widget.carDetailInitials.carDetails.model.toString(),
-                    name: widget.carDetailInitials.carDetails.name.toString(),
-                    image: widget.carDetailInitials.carDetails.images!.toList(),
-                    price: widget.carDetailInitials.carDetails.price.toString(),
+                    category: widget.userData['name'],
+                    image: widget.serviceData['images'],
+                    services: widget.serviceData['company_name'],
+                    isCompany: true,
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
                   ),
                   SizedBox(
                     height: height * 0.02,
@@ -209,56 +216,12 @@ class DetailScreenState extends State<CarDetailScreen> {
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        'Features and Specifications',
+                        widget.serviceData['description'],
                         style: Theme.of(context)
                             .textTheme
-                            .headline2!
+                            .titleMedium!
                             .copyWith(color: AppColors.black),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.015,
-                  ),
-                  FeaturesCarDetail(
-                    carDetailInitials: widget.carDetailInitials,
-                  ),
-                  SizedBox(
-                    height: height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        'Description',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline2!
-                            .copyWith(color: AppColors.black),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: ReadMoreText(
-                      widget.carDetailInitials.carDetails.description
-                          .toString(),
-                      trimLength: 2,
-                      trimMode: TrimMode.Line,
-                      lessStyle: TextStyle(
-                          color: AppColors.black, fontWeight: FontWeight.bold),
-                      moreStyle: TextStyle(
-                          color: AppColors.black, fontWeight: FontWeight.bold),
-                      trimCollapsedText: 'See More',
-                      trimExpandedText: 'See Less',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall!
-                          .copyWith(color: AppColors.black),
                     ),
                   ),
                   SizedBox(
@@ -272,7 +235,7 @@ class DetailScreenState extends State<CarDetailScreen> {
                         'About This Seller',
                         style: Theme.of(context)
                             .textTheme
-                            .headline2!
+                            .titleMedium!
                             .copyWith(color: AppColors.black),
                       ),
                     ),
@@ -285,20 +248,20 @@ class DetailScreenState extends State<CarDetailScreen> {
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        widget.carDetailInitials.carDetails.sellerType
-                            .toString(),
+                        widget.userData['address'],
                         style: Theme.of(context)
                             .textTheme
-                            .headline3!
+                            .titleSmall!
                             .copyWith(color: AppColors.black),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: height * 0.005,
+                    height: height * 0.05,
                   ),
                   ProfileCarDetail(
-                    profile: widget.carDetailInitials.carDetails,
+                    profile: widget.userData,
+                    serviceData: widget.serviceData,
                     auth: _isLogIn,
                   ),
                   SizedBox(
@@ -311,8 +274,8 @@ class DetailScreenState extends State<CarDetailScreen> {
   }
 
   navigateToStory() {
-    Navigation().push(
-        StoryPage(files: widget.carDetailInitials.carDetails.images!.toList()),
-        context);
+    // Navigation().push(
+    //     StoryPage(files: widget.carDetailInitials.carDetails.images!.toList()),
+    //     context);
   }
 }

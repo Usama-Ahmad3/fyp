@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 Widget ImageWidget(double height, String image) {
   return SizedBox(
@@ -26,7 +26,7 @@ Widget TextWidget(
         title,
         style: Theme.of(context)
             .textTheme
-            .headline2!
+            .titleMedium!
             .copyWith(color: AppColors.black),
       ),
       Padding(
@@ -36,7 +36,7 @@ Widget TextWidget(
           subtitle1,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .bodyLarge!
               .copyWith(color: AppColors.blue),
         ),
       ),
@@ -47,7 +47,7 @@ Widget TextWidget(
                 subtitle2,
                 style: Theme.of(context)
                     .textTheme
-                    .headline4!
+                    .bodyLarge!
                     .copyWith(color: AppColors.blue),
               ),
             )
@@ -63,7 +63,7 @@ Widget TextWidget(
           text1,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .bodyLarge!
               .copyWith(color: AppColors.black, fontSize: height * 0.018),
         ),
       ),
@@ -74,7 +74,7 @@ Widget TextWidget(
           text2,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .bodyLarge!
               .copyWith(color: AppColors.black, fontSize: height * 0.02),
         ),
       ),

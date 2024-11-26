@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:maintenance/utils/images.dart';
 
 Widget cachedNetworkImage(
     {double? height,
@@ -19,13 +20,13 @@ Widget cachedNetworkImage(
     color: color,
     placeholder: (context, str) {
       return Image.asset(
-        placeholder ?? 'assets/images/wizmo.jpg',
+        placeholder ?? AppImages.appIcon,
         fit: errorFit ?? BoxFit.contain,
       );
     },
     fit: imageFit ?? BoxFit.contain,
     errorWidget: (context, url, error) => Image.asset(
-      placeholder ?? 'assets/images/wizmo.jpg',
+      placeholder ?? AppImages.appIcon,
       fit: errorFit ?? BoxFit.contain,
     ),
   );

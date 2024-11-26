@@ -1,4 +1,4 @@
-name: wizmo
+name: maintenance
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -45,7 +45,7 @@ dependencies:
   cached_network_image: ^3.3.0
   lottie: ^2.7.0
   convex_bottom_bar: ^3.2.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   dots_indicator: ^3.0.0
   font_awesome_flutter: ^10.6.0
   pull_to_refresh: ^2.0.0
@@ -58,10 +58,10 @@ dependencies:
   intl: ^0.19.0
   http_parser: ^4.0.2
   readmore: ^2.2.0
-  firebase_auth: ^4.19.4
-  firebase_core: ^2.30.1
-  firebase_storage:
-  cloud_firestore:
+  firebase_auth: ^5.3.3
+  firebase_core: ^3.8.0
+  firebase_storage: ^12.3.6
+  cloud_firestore: ^5.5.0
 
 dev_dependencies:
   flutter_test:

@@ -1,20 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
-import 'package:wizmo/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
+import 'package:maintenance/firebase_options.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
+import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 
 import 'view/onboarding/main_onboarding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: 'AIzaSyBg3H8XGI3JiGNwUiuOj0fsrpYHuSv9dXU',
-          appId: 'com.usama.side_project',
-          messagingSenderId: '',
-          storageBucket: "sideproject-667c3.appspot.com",
-          projectId: 'sideproject-667c3'));
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const App());
 }
 
@@ -62,7 +57,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return MaterialApp(
-      title: 'Wizmo',
+      title: 'maintenance',
       color: AppColors.white,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -71,12 +66,13 @@ class MyApp extends StatelessWidget {
           textTheme: TextTheme(
               // titleMedium:
               //     TextStyle(color: AppColors.black, fontSize: height * 0.04),
-              headline1:
+              titleLarge:
                   TextStyle(color: AppColors.black, fontSize: height * 0.06),
-              headline2: TextStyle(color: Colors.grey, fontSize: height * 0.03),
-              headline3:
+              titleMedium:
+                  TextStyle(color: Colors.grey, fontSize: height * 0.03),
+              titleSmall:
                   TextStyle(color: Colors.grey, fontSize: height * 0.018),
-              headline4:
+              bodyLarge:
                   TextStyle(color: AppColors.grey, fontSize: height * 0.017))),
       home: walk
           ? MainBottomBar(

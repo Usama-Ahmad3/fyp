@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wizmo/res/colors/app_colors.dart';
+import 'package:maintenance/res/colors/app_colors.dart';
 
 class AppBarWidget extends StatelessWidget {
   final Size size;
@@ -23,7 +23,7 @@ class AppBarWidget extends StatelessWidget {
           title,
           style: Theme.of(context)
               .textTheme
-              .headline2!
+              .titleMedium!
               .copyWith(color: AppColors.black),
         ),
         bottom: PreferredSize(
