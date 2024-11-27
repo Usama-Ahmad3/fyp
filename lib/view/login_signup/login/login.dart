@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/authentication/authentication.dart';
@@ -11,6 +12,7 @@ import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.da
 import 'package:maintenance/view/login_signup/forget_password/forget_password.dart';
 import 'package:maintenance/view/login_signup/signup/signup.dart';
 import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -133,7 +135,6 @@ class _LogInState extends State<LogIn> {
                                 email: emailController.text,
                                 password: passwordController.text)
                             .then((value) async {
-                          await Authentication().saveLogin(true);
                           emailController.clear();
                           passwordController.clear();
                           if (mounted) {
@@ -142,7 +143,20 @@ class _LogInState extends State<LogIn> {
                             setState(() {
                               loading = false;
                             });
-                            Navigation().pushRep(MainBottomBar(), context);
+                            print(value.user?.uid);
+                            final user = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(value.user?.uid)
+                                .get();
+                            print("**********************");
+                            print(user['role']);
+                            if (user['role'] == "User") {
+                              Navigation().pushRep(MainBottomBar(), context);
+                            } else {
+                              Navigation()
+                                  .pushRep(MainBottomBarSeller(), context);
+                            }
+                            await Authentication().saveLogin(true);
                           }
                         }).onError((error, stackTrace) {
                           FlushBarUtils.flushBar(

@@ -76,6 +76,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         ),
         child: TextFormField(
           controller: widget.controller,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: widget.obscure,
           onChanged: widget.onChanged,
           onFieldSubmitted: widget.onSubmitted,
@@ -206,6 +207,7 @@ class _TextFieldMultiWidgetState extends State<TextFieldMultiWidget> {
           obscureText: widget.obscure,
           onChanged: widget.onChanged,
           onFieldSubmitted: widget.onSubmitted,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           focusNode: widget.focus,
           validator: widget.onValidate,
           enabled: widget.enable,

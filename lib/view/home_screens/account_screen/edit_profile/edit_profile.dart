@@ -72,7 +72,14 @@ class _EditProfileState extends State<EditProfile> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: Text(
+            'Profile',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: AppColors.black),
+          ),
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(

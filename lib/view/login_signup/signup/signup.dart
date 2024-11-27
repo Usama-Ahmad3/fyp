@@ -7,16 +7,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'package:maintenance/main.dart';
 import 'package:maintenance/res/authentication/authentication.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/res/common_widgets/cashed_image.dart';
 import 'package:maintenance/res/common_widgets/text_field_widget.dart';
 import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/login_signup/login/login.dart';
 import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 
 import '../../../res/colors/app_colors.dart';
 
@@ -34,7 +34,6 @@ class _SignUpState extends State<SignUp> {
   var contactController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
-  var licenseController = TextEditingController();
   var idCardController = TextEditingController();
   var dobController = TextEditingController();
   String? _role;
@@ -46,8 +45,8 @@ class _SignUpState extends State<SignUp> {
   Future<DateTime?> slecteDtateTime(BuildContext context) => showDatePicker(
         context: context,
         // initialDate: DateTime(),
-        firstDate: DateTime(2023),
-        lastDate: DateTime(2030),
+        firstDate: DateTime(DateTime.now().year - 60),
+        lastDate: DateTime.now(),
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
@@ -91,14 +90,19 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.04,
               ),
-              Lottie.asset('assets/lotie_files/cars.json',
-                  height: height * 0.4, width: width),
+              cachedNetworkImage(
+                  cuisineImageUrl:
+                      'https://tse4.mm.bing.net/th?id=OIP.7jV8fIMTD6_D30jljYWUHgHaEZ&pid=Api&P=0&h=220',
+                  height: height * 0.4,
+                  imageFit: BoxFit.fill,
+                  errorFit: BoxFit.contain,
+                  width: width),
               SizedBox(
                 height: height * 0.015,
               ),
               Center(
                 child: Text(
-                  'Get started now with Wizmo',
+                  'Get started now with Maintenance & Repairing Services',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold, color: AppColors.black),
                 ),
@@ -227,28 +231,6 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'License'),
-              TextFieldWidget(
-                controller: licenseController,
-                hintText: 'Enter Your License Number',
-                prefixIcon: Icons.approval,
-                onTap: () {},
-                onChanged: (value) {
-                  // return provider.test();
-                },
-                onValidate: (value) {
-                  if (value.isEmpty) {
-                    return "License field can't be empty";
-                  }
-                  return null;
-                },
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(height * 0.034),
-                    borderSide: BorderSide(color: AppColors.white)),
-              ),
-              SizedBox(
-                height: height * 0.01,
-              ),
               const TextData(text: 'ID Card'),
               TextFieldWidget(
                 controller: idCardController,
@@ -311,7 +293,7 @@ class _SignUpState extends State<SignUp> {
                   isExpanded: true,
                   value: _role,
                   hint: Text(
-                    "Role",
+                    "Select Your Role",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   items: roleUser
@@ -473,7 +455,6 @@ class _SignUpState extends State<SignUp> {
                           'address': addressController.text,
                           'phone_number': contactController.text,
                           'date_of_birth': dobController.text,
-                          'driver_license': licenseController.text,
                           'id_card': idCardController.text,
                           'profile_image': url,
                           'id': id,
@@ -481,7 +462,7 @@ class _SignUpState extends State<SignUp> {
                         });
                         await Authentication().saveLogin(true);
 
-                        navigateToHomeScreen();
+                        navigateToHomeScreen(_role == 'User');
                       }).onError((error, stackTrace) {
                         FlushBarUtils.flushBar(
                             error.toString(), context, "Error Catch");
@@ -564,7 +545,9 @@ class _SignUpState extends State<SignUp> {
     Navigation().pushRep(const LogIn(), context);
   }
 
-  navigateToHomeScreen() {
-    Navigation().pushRep(MainBottomBar(), context);
+  navigateToHomeScreen(bool isUser) {
+    isUser
+        ? Navigation().pushRep(MainBottomBar(), context)
+        : Navigation().pushRep(MainBottomBarSeller(), context);
   }
 }

@@ -5,13 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maintenance/models/sell_car_model.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
+import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 
 class MapScreen extends StatefulWidget {
   final TextEditingController location;
-  final SellCarModel sellCarModel;
-  const MapScreen(
-      {super.key, required this.location, required this.sellCarModel});
+  final Function(LatLng) onTap;
+  const MapScreen({super.key, required this.location, required this.onTap});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -41,17 +41,13 @@ class _MapScreenState extends State<MapScreen> {
   defaultLocation() async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((value) async {
-      print('ok jxddddddddddddddddddddddddddddddddd');
       long = value.longitude;
       lat = value.latitude;
-      widget.sellCarModel.latitude = value.latitude.toString();
-      widget.sellCarModel.longitude = value.longitude.toString();
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
       print(placemarks);
       widget.location.text =
           '${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].country}';
     });
-    // var coordinates = Coordinates(control.latitude, control.longitude);
     addMarker();
     setState(() {
       loading = false;
@@ -96,15 +92,28 @@ class _MapScreenState extends State<MapScreen> {
                           mapController = controller;
                         },
                         liteModeEnabled: true,
-                        onTap: (latLng) {
-                          allMarkers.add(Marker(
-                            markerId: const MarkerId('myMarker'),
-                            draggable: false,
-                            onTap: () {
-                              debugPrint('marker');
-                            },
-                            position: LatLng(latLng.latitude, latLng.longitude),
-                          ));
+                        onTap: (latLng) async {
+                          try {
+                            widget.onTap(latLng);
+                            allMarkers.add(Marker(
+                              markerId: const MarkerId('myMarker'),
+                              draggable: false,
+                              onTap: () {
+                                debugPrint('marker');
+                              },
+                              position:
+                                  LatLng(latLng.latitude, latLng.longitude),
+                            ));
+                            List<Placemark> placemarks =
+                                await placemarkFromCoordinates(lat, long);
+                            print(placemarks);
+                            widget.location.text =
+                                '${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].country}';
+                            setState(() {});
+                          } catch (e) {
+                            FlushBarUtils.flushBar(
+                                e.toString(), context, "Something went wrong");
+                          }
                         },
                         compassEnabled: true,
                         mapType: MapType.normal,

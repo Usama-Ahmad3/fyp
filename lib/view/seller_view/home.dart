@@ -1,23 +1,49 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/empty_screen.dart';
 import 'package:maintenance/utils/images.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/specific_category_services.dart';
+import 'package:maintenance/view/seller_view/sell_screen/sell_screen/sell_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<HomePage> createState() => HomePageState();
+  State<Home> createState() => HomeState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomeState extends State<Home> {
   Future<QuerySnapshot> fetchDataFromFirebase() async {
     return FirebaseFirestore.instance.collection('categories').get();
+  }
+
+  Future<List<Map<String, dynamic>>> getServicesByUserId(String userId) async {
+    try {
+      final categorySnapshot =
+          await FirebaseFirestore.instance.collection('categories').get();
+
+      List<Map<String, dynamic>> matchingServices = [];
+      for (var categoryDoc in categorySnapshot.docs) {
+        final servicesQuery = await categoryDoc.reference
+            .collection('services')
+            .where('user_id', isEqualTo: userId)
+            .get();
+
+        for (var serviceDoc in servicesQuery.docs) {
+          matchingServices.add(serviceDoc.data());
+        }
+      }
+
+      return matchingServices;
+    } catch (e) {
+      print('Error fetching services: $e');
+      return [];
+    }
   }
 
   final List<String> carouselImageList = [
@@ -95,7 +121,7 @@ class HomePageState extends State<HomePage> {
                         padding: EdgeInsets.symmetric(
                             horizontal: width * 0.04, vertical: height * 0.008),
                         child: Text(
-                          'Categories',
+                          'My Services',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -103,7 +129,8 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                       FutureBuilder(
-                        future: fetchDataFromFirebase(),
+                        future: getServicesByUserId(
+                            FirebaseAuth.instance.currentUser!.uid),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
@@ -125,19 +152,32 @@ class HomePageState extends State<HomePage> {
                             } else {
                               return Column(
                                 children: [
-                                  ...List.generate(snapshot.data!.docs.length,
+                                  ...List.generate(snapshot.data!.length,
                                       (index) {
-                                    var document = snapshot.data!.docs[index];
+                                    var data = snapshot.data![index];
+                                    DateTime dateTime =
+                                        data['created_at'].toDate();
+                                    final time = DateFormat(
+                                            'dd MMMM yyyy \'at\' hh:mm a')
+                                        .format(
+                                      DateTime(
+                                          dateTime.year,
+                                          dateTime.month,
+                                          dateTime.day,
+                                          dateTime.hour,
+                                          dateTime.minute,
+                                          dateTime.second),
+                                    );
                                     return CategoryContainer(
-                                      image: document['images'],
-                                      category: document['name'],
-                                      services:
-                                          document['images'].length.toString(),
+                                      image: data['images'],
+                                      category: time,
+                                      isCompany: true,
+                                      services: data['company_name'],
                                       onTap: () {
-                                        print(document['id']);
                                         Navigation().push(
-                                            SpecificCategoryServices(
-                                                id: document['id']),
+                                            AddService(
+                                              details: data,
+                                            ),
                                             context);
                                       },
                                     );

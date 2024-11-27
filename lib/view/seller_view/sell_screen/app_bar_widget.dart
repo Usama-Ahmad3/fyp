@@ -5,20 +5,18 @@ class AppBarWidget extends StatelessWidget {
   final Size size;
   final String title;
   final Color color1;
-  final Color color2;
-  final Color color3;
+  final bool canBack;
   const AppBarWidget(
       {super.key,
       required this.size,
+      this.canBack = false,
       required this.color1,
-      required this.color2,
-      required this.color3,
       required this.title});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: canBack,
         title: Text(
           title,
           style: Theme.of(context)
@@ -46,22 +44,6 @@ class AppBarWidget extends StatelessWidget {
                 height: size.height * 0.005,
                 width: size.width * 0.2,
                 color: color1,
-              ),
-              SizedBox(
-                width: size.width * 0.01,
-              ),
-              Container(
-                height: size.height * 0.005,
-                width: size.width * 0.2,
-                color: color2,
-              ),
-              SizedBox(
-                width: size.width * 0.01,
-              ),
-              Container(
-                height: size.height * 0.005,
-                width: size.width * 0.2,
-                color: color3,
               ),
             ],
           ),

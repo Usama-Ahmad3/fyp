@@ -7,18 +7,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:maintenance/models/sell_car_model.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
-import 'package:maintenance/view/home_screens/sell_screen/app_bar_widget.dart';
-import 'package:maintenance/view/home_screens/sell_screen/congrats_screen/congrats_screen.dart';
-import 'package:maintenance/view/login_signup/widgets/constants.dart';
+import 'package:maintenance/view/seller_view/sell_screen/app_bar_widget.dart';
+import 'package:maintenance/view/seller_view/sell_screen/congrats_screen/congrats_screen.dart';
 
 class AddPhoto extends StatefulWidget {
-  final SellCarModel sellCarModel;
-  const AddPhoto({super.key, required this.sellCarModel});
+  final Map detail;
+  final List? images;
+  const AddPhoto({super.key, required this.detail, this.images});
 
   @override
   State<AddPhoto> createState() => _AddPhotoState();
@@ -36,21 +35,6 @@ class _AddPhotoState extends State<AddPhoto> {
     } else {
       print('Not Picked');
     }
-  }
-
-  Future _fetchData(String id) async {
-    DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    Map<String, dynamic> userData = {};
-    if (querySnapshot.exists) {
-      userData = querySnapshot.data() as Map<String, dynamic>;
-      print(userData);
-    } else {
-      print('Document does not exist');
-    }
-    return userData;
   }
 
   cameraChoicePicker(size) {
@@ -133,8 +117,6 @@ class _AddPhotoState extends State<AddPhoto> {
           title: 'Add photo',
           size: MediaQuery.sizeOf(context),
           color1: AppColors.buttonColor,
-          color2: AppColors.buttonColor,
-          color3: AppColors.buttonColor,
         ),
       ),
       body: Padding(
@@ -158,7 +140,11 @@ class _AddPhotoState extends State<AddPhoto> {
                           Wrap(
                             children: [
                               ...List.generate(
-                                  image!.isNotEmpty ? image!.length + 1 : 1,
+                                  widget.images != null
+                                      ? widget.images!.length + 1
+                                      : image!.isNotEmpty
+                                          ? image!.length + 1
+                                          : 1,
                                   (index) => index == 0
                                       ? Padding(
                                           padding: EdgeInsets.symmetric(
@@ -255,10 +241,16 @@ class _AddPhotoState extends State<AddPhoto> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               height * 0.015),
-                                                      child: Image.file(
-                                                          image![index - 1]
-                                                              .absolute,
-                                                          fit: BoxFit.fill),
+                                                      child: widget.images !=
+                                                              null
+                                                          ? Image.network(
+                                                              widget.images![
+                                                                  index],
+                                                              fit: BoxFit.fill)
+                                                          : Image.file(
+                                                              image![index - 1]
+                                                                  .absolute,
+                                                              fit: BoxFit.fill),
                                                     )),
                                               ),
                                               Positioned(
@@ -299,14 +291,13 @@ class _AddPhotoState extends State<AddPhoto> {
                                 loading = true;
                               });
                               List imageLinks = [];
-                              final cars =
-                                  FirebaseFirestore.instance.collection('cars');
+                              final categoryRef = FirebaseFirestore.instance
+                                  .collection('categories')
+                                  .doc(widget.detail['category_id']);
                               final id = FirebaseAuth.instance.currentUser!.uid;
-                              Map<String, dynamic> profile =
-                                  await _fetchData(id);
                               final ref = firebase_storage
                                   .FirebaseStorage.instance
-                                  .ref('/cars/$id');
+                                  .ref('/services/$id');
                               for (var imageIndex in image!) {
                                 firebase_storage.UploadTask uploadTask =
                                     ref.putFile(File(imageIndex.path));
@@ -322,56 +313,23 @@ class _AddPhotoState extends State<AddPhoto> {
                                 final url = await ref.getDownloadURL();
                                 imageLinks.add(url);
                               }
-                              cars.doc().set({
-                                'Description': widget.sellCarModel.description,
-                                "Location": widget.sellCarModel.location,
-                                "Price": widget.sellCarModel.price,
-                                "Registration Number":
-                                    widget.sellCarModel.registration,
-                                'Seller Type': widget.sellCarModel.sellerType,
-                                "address": profile['address'],
-                                "email": profile["email"],
-                                'id': id,
+                              await categoryRef.collection('services').add({
+                                'about': widget.detail['about'],
+                                'company_name': widget.detail['company_name'],
+                                'seller_type': widget.detail['seller_type'],
+                                'description': widget.detail['description'],
+                                'location': widget.detail['location'],
+                                'latitude': widget.detail['latitude'],
+                                'longitude': widget.detail['longitude'],
                                 'images': imageLinks,
-                                'isSaved': false,
-                                "latitude": widget.sellCarModel.latitude,
-                                "longitude": widget.sellCarModel.longitude,
-                                "make": widget.sellCarModel.make,
-                                "model": widget.sellCarModel.model,
-                                "car_name": widget.sellCarModel.carName,
-                                "name": profile['name'],
-                                "phone_number": profile['phone_number'],
-                                "profile_image": profile['profile_image'],
-                                "features": featureNames,
-                                "feature_values": [
-                                  widget.sellCarModel.make,
-                                  widget.sellCarModel.model,
-                                  widget.sellCarModel.variation,
-                                  widget.sellCarModel.year,
-                                  widget.sellCarModel.bodyType,
-                                  widget.sellCarModel.acceleration,
-                                  widget.sellCarModel.driveTrain,
-                                  widget.sellCarModel.co2,
-                                  widget.sellCarModel.fuelType,
-                                  widget.sellCarModel.consumption,
-                                  widget.sellCarModel.engineSize,
-                                  widget.sellCarModel.enginePower,
-                                  widget.sellCarModel.mileage,
-                                  widget.sellCarModel.gearBox,
-                                  widget.sellCarModel.colour,
-                                  widget.sellCarModel.doors,
-                                  widget.sellCarModel.seats,
-                                  widget.sellCarModel.tax,
-                                  widget.sellCarModel.insurance,
-                                ]
-                              }).then((value) {
+                                'created_at': FieldValue.serverTimestamp(),
+                                'user_id': id,
+                                'category': widget.detail['category']
+                              }).then((value) async {
+                                await value.update({'id': value.id});
                                 Navigation()
                                     .pushRep(const CongratsScreen(), context);
                               });
-                              if (kDebugMode) {
-                                print("SSSSSSSSSSSSSSSSSSSSS");
-                                print(widget.sellCarModel.description);
-                              }
                             } else {
                               FlushBarUtils.flushBar('Images are not added',
                                   context, 'Information');

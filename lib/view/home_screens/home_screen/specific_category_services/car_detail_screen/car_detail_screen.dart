@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/story_page.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
@@ -274,8 +275,7 @@ class DetailScreenState extends State<CarDetailScreen> {
   }
 
   navigateToStory() {
-    // Navigation().push(
-    //     StoryPage(files: widget.carDetailInitials.carDetails.images!.toList()),
-    //     context);
+    Navigation()
+        .push(StoryPage(files: widget.serviceData['images'].toList()), context);
   }
 }

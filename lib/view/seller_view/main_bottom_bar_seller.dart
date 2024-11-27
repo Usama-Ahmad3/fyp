@@ -5,23 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/popup.dart';
 import 'package:maintenance/view/home_screens/account_screen/account_screen.dart';
-import 'package:maintenance/view/home_screens/home_screen/home_page.dart';
-import 'package:maintenance/view/home_screens/save_screen/save_screen.dart';
-import 'package:maintenance/view/home_screens/search_screen/search_screen.dart';
+import 'package:maintenance/view/seller_view/home.dart';
+
+import 'sell_screen/sell_screen/sell_screen.dart';
 
 // ignore: must_be_immutable
-class MainBottomBar extends StatefulWidget {
+class MainBottomBarSeller extends StatefulWidget {
   int index;
-  MainBottomBar({
+  MainBottomBarSeller({
     super.key,
     this.index = 0,
   });
 
   @override
-  State<MainBottomBar> createState() => _MainBottomBarState();
+  State<MainBottomBarSeller> createState() => _MainBottomBarSellerState();
 }
 
-class _MainBottomBarState extends State<MainBottomBar> {
+class _MainBottomBarSellerState extends State<MainBottomBarSeller> {
   popupDialog(
       {required BuildContext context,
       required String text,
@@ -43,9 +43,8 @@ class _MainBottomBarState extends State<MainBottomBar> {
 
   int _initialIndex = 0;
   final page = [
-    const HomePage(),
-    const SearchScreen(),
-    const SaveScreen(),
+    const Home(),
+    const AddService(),
     const AccountScreen(),
   ];
   pageChange(int index) {
@@ -72,11 +71,9 @@ class _MainBottomBarState extends State<MainBottomBar> {
               title: 'Home',
             ),
             TabItem(
-                icon: Icons.search, title: 'Search', activeIcon: Icons.search),
-            TabItem(
-                icon: Icons.favorite_border,
-                activeIcon: Icons.favorite,
-                title: 'Saved'),
+                icon: Icons.sell_outlined,
+                title: 'Add Service',
+                activeIcon: Icons.sell),
             TabItem(
                 icon: Icons.account_circle_outlined,
                 title: 'Account',
