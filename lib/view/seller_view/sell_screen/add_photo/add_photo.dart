@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,7 +18,14 @@ import 'package:maintenance/view/seller_view/sell_screen/congrats_screen/congrat
 class AddPhoto extends StatefulWidget {
   final Map detail;
   final List? images;
-  const AddPhoto({super.key, required this.detail, this.images});
+  final String? categoryId;
+  final String? serviceId;
+  const AddPhoto(
+      {super.key,
+      required this.detail,
+      this.images,
+      this.categoryId,
+      this.serviceId});
 
   @override
   State<AddPhoto> createState() => _AddPhotoState();
@@ -26,6 +34,8 @@ class AddPhoto extends StatefulWidget {
 class _AddPhotoState extends State<AddPhoto> {
   List<File>? image = [];
   bool loading = false;
+  List<String> networkImages = [];
+  List<String> removedNetworkImages = [];
   pickImage(source) async {
     final XFile? file = await ImagePicker().pickImage(source: source);
     if (file != null) {
@@ -103,6 +113,11 @@ class _AddPhotoState extends State<AddPhoto> {
     if (kDebugMode) {
       print('In The Add Photo');
     }
+    if (widget.images != null) {
+      for (var i in widget.images!) {
+        networkImages.add(i);
+      }
+    }
     super.initState();
   }
 
@@ -125,13 +140,84 @@ class _AddPhotoState extends State<AddPhoto> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: height * 0.05,
-              ),
+              networkImages.isNotEmpty
+                  ? const SizedBox.shrink()
+                  : SizedBox(
+                      height: height * 0.05,
+                    ),
+              networkImages.isEmpty
+                  ? const SizedBox.shrink()
+                  : SizedBox(
+                      height: height * 0.14,
+                      child: ListView.builder(
+                          itemCount: networkImages.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width * 0.01),
+                                child: Stack(
+                                  children: [
+                                    SizedBox(
+                                      height: height * 0.17,
+                                      width: width * 0.41,
+                                    ),
+                                    Positioned(
+                                      top: height * 0.015,
+                                      left: 0,
+                                      child: Container(
+                                          height: height * 0.12,
+                                          width: width * 0.38,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: AppColors.shadowColor
+                                                        .withOpacity(0.17),
+                                                    blurStyle: BlurStyle.normal,
+                                                    offset: const Offset(1, 1),
+                                                    blurRadius: 12,
+                                                    spreadRadius: 2)
+                                              ],
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      height * 0.015)),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                                height * 0.015),
+                                            child: Image.network(
+                                                networkImages[index],
+                                                fit: BoxFit.fill),
+                                          )),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: InkWell(
+                                        onTap: () => setState(() {
+                                          removedNetworkImages
+                                              .add(networkImages[index]);
+                                          networkImages.removeAt(index);
+                                        }),
+                                        child: CircleAvatar(
+                                          backgroundColor: AppColors.white,
+                                          radius: height * 0.02,
+                                          child: Icon(
+                                            FontAwesomeIcons.close,
+                                            color: AppColors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )),
+                    ),
               Stack(
                 children: [
                   SizedBox(
-                    height: height * 0.83,
+                    height: networkImages.isNotEmpty
+                        ? height * 0.73
+                        : height * 0.83,
                     width: width,
                     child: SingleChildScrollView(
                       child: Column(
@@ -140,11 +226,7 @@ class _AddPhotoState extends State<AddPhoto> {
                           Wrap(
                             children: [
                               ...List.generate(
-                                  widget.images != null
-                                      ? widget.images!.length + 1
-                                      : image!.isNotEmpty
-                                          ? image!.length + 1
-                                          : 1,
+                                  image!.isNotEmpty ? image!.length + 1 : 1,
                                   (index) => index == 0
                                       ? Padding(
                                           padding: EdgeInsets.symmetric(
@@ -241,16 +323,10 @@ class _AddPhotoState extends State<AddPhoto> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               height * 0.015),
-                                                      child: widget.images !=
-                                                              null
-                                                          ? Image.network(
-                                                              widget.images![
-                                                                  index],
-                                                              fit: BoxFit.fill)
-                                                          : Image.file(
-                                                              image![index - 1]
-                                                                  .absolute,
-                                                              fit: BoxFit.fill),
+                                                      child: Image.file(
+                                                          image![index - 1]
+                                                              .absolute,
+                                                          fit: BoxFit.fill),
                                                     )),
                                               ),
                                               Positioned(
@@ -286,54 +362,141 @@ class _AddPhotoState extends State<AddPhoto> {
                           text: 'Continue',
                           loading: loading,
                           onTap: () async {
-                            if (image!.isNotEmpty) {
-                              setState(() {
-                                loading = true;
-                              });
-                              List imageLinks = [];
-                              final categoryRef = FirebaseFirestore.instance
-                                  .collection('categories')
-                                  .doc(widget.detail['category_id']);
+                            List imageLinks = [];
+                            try {
                               final id = FirebaseAuth.instance.currentUser!.uid;
-                              final ref = firebase_storage
-                                  .FirebaseStorage.instance
-                                  .ref('/services/$id');
-                              for (var imageIndex in image!) {
-                                firebase_storage.UploadTask uploadTask =
-                                    ref.putFile(File(imageIndex.path));
-                                await Future.value(uploadTask).then((value) {
-                                  loading = false;
-                                  setState(() {});
-                                }).onError((error, stackTrace) {
-                                  loading = false;
-                                  setState(() {});
-                                  FlushBarUtils.flushBar(
-                                      error.toString(), context, "Error");
+                              if (image!.isNotEmpty || widget.images != null) {
+                                setState(() {
+                                  loading = true;
                                 });
-                                final url = await ref.getDownloadURL();
-                                imageLinks.add(url);
+                                for (var imageIndex in image!) {
+                                  String fileName = DateTime.now()
+                                      .microsecondsSinceEpoch
+                                      .toString();
+                                  final ref = firebase_storage
+                                      .FirebaseStorage.instance
+                                      .ref('/services/$id/$fileName');
+                                  await ref.putFile(File(imageIndex.path));
+                                  final url = await ref.getDownloadURL();
+                                  imageLinks.add(url);
+                                }
+                                if (widget.images != null) {
+                                  if (removedNetworkImages.isNotEmpty) {
+                                    for (var imagesUrl
+                                        in removedNetworkImages) {
+                                      await FirebaseStorage.instance
+                                          .refFromURL(imagesUrl)
+                                          .delete();
+                                    }
+                                  }
+                                  for (var leftImages in networkImages) {
+                                    imageLinks.add(leftImages);
+                                  }
+                                  if (widget.categoryId != null) {
+                                    QuerySnapshot querySnapshot =
+                                        await FirebaseFirestore.instance
+                                            .collection('categories')
+                                            .doc(widget.categoryId)
+                                            .collection('services')
+                                            .where('id',
+                                                isEqualTo: widget.serviceId)
+                                            .get();
+                                    for (QueryDocumentSnapshot doc
+                                        in querySnapshot.docs) {
+                                      await doc.reference.delete();
+                                    }
+                                    final categoryRef = FirebaseFirestore
+                                        .instance
+                                        .collection('categories')
+                                        .doc(widget.detail['category_id']);
+                                    await categoryRef
+                                        .collection('services')
+                                        .add({
+                                      'about': widget.detail['about'],
+                                      'company_name':
+                                          widget.detail['company_name'],
+                                      'seller_type':
+                                          widget.detail['seller_type'],
+                                      'description':
+                                          widget.detail['description'],
+                                      'location': widget.detail['location'],
+                                      'latitude': widget.detail['latitude'],
+                                      'longitude': widget.detail['longitude'],
+                                      'images': imageLinks,
+                                      'created_at':
+                                          FieldValue.serverTimestamp(),
+                                      'user_id': id,
+                                      'category': widget.detail['category']
+                                    }).then((value) async {
+                                      await value.update({'id': value.id});
+                                      Navigation().pushRep(
+                                          const CongratsScreen(), context);
+                                    });
+                                  } else {
+                                    QuerySnapshot querySnapshot =
+                                        await FirebaseFirestore.instance
+                                            .collection('categories')
+                                            .doc(widget.detail['category_id'])
+                                            .collection('services')
+                                            .where('id',
+                                                isEqualTo: widget.serviceId)
+                                            .get();
+                                    for (QueryDocumentSnapshot doc
+                                        in querySnapshot.docs) {
+                                      await doc.reference.update({
+                                        'about': widget.detail['about'],
+                                        'company_name':
+                                            widget.detail['company_name'],
+                                        'seller_type':
+                                            widget.detail['seller_type'],
+                                        'description':
+                                            widget.detail['description'],
+                                        'location': widget.detail['location'],
+                                        'latitude': widget.detail['latitude'],
+                                        'longitude': widget.detail['longitude'],
+                                        'created_at':
+                                            FieldValue.serverTimestamp(),
+                                        'images': imageLinks,
+                                        'user_id': id,
+                                        'category': widget.detail['category']
+                                      }).then((value) async {
+                                        Navigation().pushRep(
+                                            const CongratsScreen(), context);
+                                      });
+                                    }
+                                  }
+                                } else {
+                                  final categoryRef = FirebaseFirestore.instance
+                                      .collection('categories')
+                                      .doc(widget.detail['category_id']);
+                                  await categoryRef.collection('services').add({
+                                    'about': widget.detail['about'],
+                                    'company_name':
+                                        widget.detail['company_name'],
+                                    'seller_type': widget.detail['seller_type'],
+                                    'description': widget.detail['description'],
+                                    'location': widget.detail['location'],
+                                    'latitude': widget.detail['latitude'],
+                                    'longitude': widget.detail['longitude'],
+                                    'images': imageLinks,
+                                    'created_at': FieldValue.serverTimestamp(),
+                                    'user_id': id,
+                                    'category': widget.detail['category']
+                                  }).then((value) async {
+                                    await value.update({'id': value.id});
+                                    Navigation().pushRep(
+                                        const CongratsScreen(), context);
+                                  });
+                                }
+                              } else {
+                                FlushBarUtils.flushBar('Images are not added',
+                                    context, 'Information');
                               }
-                              await categoryRef.collection('services').add({
-                                'about': widget.detail['about'],
-                                'company_name': widget.detail['company_name'],
-                                'seller_type': widget.detail['seller_type'],
-                                'description': widget.detail['description'],
-                                'location': widget.detail['location'],
-                                'latitude': widget.detail['latitude'],
-                                'longitude': widget.detail['longitude'],
-                                'images': imageLinks,
-                                'created_at': FieldValue.serverTimestamp(),
-                                'user_id': id,
-                                'category': widget.detail['category']
-                              }).then((value) async {
-                                await value.update({'id': value.id});
-                                Navigation()
-                                    .pushRep(const CongratsScreen(), context);
-                              });
-                            } else {
-                              FlushBarUtils.flushBar('Images are not added',
-                                  context, 'Information');
+                            } catch (e) {
+                              print("Error ==> $e");
                             }
+                            loading = false;
+                            setState(() {});
                           })),
                   Positioned(
                       bottom: height * 0.014,

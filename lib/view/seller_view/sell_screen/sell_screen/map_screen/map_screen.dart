@@ -43,6 +43,7 @@ class _MapScreenState extends State<MapScreen> {
         .then((value) async {
       long = value.longitude;
       lat = value.latitude;
+      widget.onTap(LatLng(value.latitude, value.longitude));
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
       print(placemarks);
       widget.location.text =
@@ -199,7 +200,7 @@ class _MapScreenState extends State<MapScreen> {
                   ButtonWidget(
                       text: 'Continue',
                       onTap: () {
-                        Navigation().pop(context);
+                        loading ? null : Navigation().pop(context);
                       }),
                 ],
               ),

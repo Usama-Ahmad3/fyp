@@ -150,40 +150,48 @@ class HomeState extends State<Home> {
                                         color: AppColors.buttonColor)),
                               );
                             } else {
-                              return Column(
-                                children: [
-                                  ...List.generate(snapshot.data!.length,
-                                      (index) {
-                                    var data = snapshot.data![index];
-                                    DateTime dateTime =
-                                        data['created_at'].toDate();
-                                    final time = DateFormat(
-                                            'dd MMMM yyyy \'at\' hh:mm a')
-                                        .format(
-                                      DateTime(
-                                          dateTime.year,
-                                          dateTime.month,
-                                          dateTime.day,
-                                          dateTime.hour,
-                                          dateTime.minute,
-                                          dateTime.second),
-                                    );
-                                    return CategoryContainer(
-                                      image: data['images'],
-                                      category: time,
-                                      isCompany: true,
-                                      services: data['company_name'],
-                                      onTap: () {
-                                        Navigation().push(
-                                            AddService(
-                                              details: data,
-                                            ),
-                                            context);
-                                      },
-                                    );
-                                  }),
-                                ],
-                              );
+                              if (snapshot.data != null &&
+                                  snapshot.data!.isNotEmpty) {
+                                return Column(
+                                  children: [
+                                    ...List.generate(snapshot.data!.length,
+                                        (index) {
+                                      var data = snapshot.data![index];
+                                      DateTime dateTime =
+                                          data['created_at'].toDate();
+                                      final time = DateFormat(
+                                              'dd MMMM yyyy \'at\' hh:mm a')
+                                          .format(
+                                        DateTime(
+                                            dateTime.year,
+                                            dateTime.month,
+                                            dateTime.day,
+                                            dateTime.hour,
+                                            dateTime.minute,
+                                            dateTime.second),
+                                      );
+                                      return CategoryContainer(
+                                        image: data['images'],
+                                        category: time,
+                                        isCompany: true,
+                                        services: data['company_name'],
+                                        onTap: () {
+                                          Navigation().push(
+                                              AddService(
+                                                details: data,
+                                              ),
+                                              context);
+                                        },
+                                      );
+                                    }),
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                  child: EmptyScreen(
+                                      text: "No Data Found", text2: ''),
+                                );
+                              }
                             }
                           } else {
                             return SizedBox(

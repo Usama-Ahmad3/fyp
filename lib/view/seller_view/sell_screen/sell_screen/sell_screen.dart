@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/res/common_widgets/text_field_widget.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 import 'package:maintenance/view/seller_view/sell_screen/add_photo/add_photo.dart';
 import 'package:maintenance/view/seller_view/sell_screen/app_bar_widget.dart';
 
@@ -29,10 +31,10 @@ class _AddServiceState extends State<AddService> {
   final categoryController = TextEditingController();
   List categories = [];
   List categoriesIds = [];
-  String selectedCategoryId = '';
   List sellerType = ['Dealership', 'Private Seller'];
   String latitude = '';
   String longitude = '';
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   selectChoice(
@@ -63,7 +65,6 @@ class _AddServiceState extends State<AddService> {
                           onTap: () {
                             if (title == 'Category') {
                               categoryController.text = list[index];
-                              selectedCategoryId = categoriesIds[index];
                             } else {
                               sellerTypeController.text = list[index];
                             }
@@ -324,6 +325,9 @@ class _AddServiceState extends State<AddService> {
                         text: 'Continue',
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
+                            final selectedCategoryIndex = categories.indexWhere(
+                                (element) =>
+                                    element == categoryController.text);
                             final detail = {
                               "company_name": nameController.text,
                               "seller_type": sellerTypeController.text,
@@ -333,35 +337,93 @@ class _AddServiceState extends State<AddService> {
                               'latitude': latitude,
                               'longitude': longitude,
                               "category": categoryController.text,
-                              "category_id": selectedCategoryId,
+                              "category_id":
+                                  categoriesIds[selectedCategoryIndex],
                             };
+                            int docId = -1;
                             if (widget.details != null &&
                                 (widget.details!['category'] !=
                                     categoryController.text)) {
-                              final docId = categories.indexWhere(
+                              docId = categories.indexWhere(
                                 (element) =>
                                     element == widget.details!['category'],
                               );
-                              // take deletion to next screen(add photo)
                               if (docId != -1 &&
                                   widget.details!['id'] != null) {
-                                try {
-                                  await FirebaseFirestore.instance
-                                      .collection('categories')
-                                      .doc(categoriesIds[docId])
-                                      .collection('services')
-                                      .doc(widget.details!['id'])
-                                      .delete();
-                                } catch (e) {
-                                  print('Error deleting document: $e');
-                                }
+                                Navigation().push(
+                                    AddPhoto(
+                                      detail: detail,
+                                      categoryId: categoriesIds[docId],
+                                      serviceId: widget.details?['id'],
+                                      images: widget.details?['images'],
+                                    ),
+                                    context);
                               }
+                            } else if (widget.details != null) {
+                              Navigation().push(
+                                  AddPhoto(
+                                    detail: detail,
+                                    images: widget.details?['images'],
+                                  ),
+                                  context);
+                            } else {
+                              Navigation().push(
+                                  AddPhoto(
+                                    detail: detail,
+                                  ),
+                                  context);
                             }
-                            Navigation()
-                                .push(AddPhoto(detail: detail), context);
                           }
                         }),
                   ),
+                  widget.details != null
+                      ? SizedBox(
+                          height: height * 0.02,
+                        )
+                      : const SizedBox.shrink(),
+                  widget.details != null
+                      ? Center(
+                          child: ButtonWidget(
+                              text: 'Delete',
+                              loading: isLoading,
+                              onTap: () async {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                final docId = categories.indexWhere(
+                                  (element) =>
+                                      element == widget.details!['category'],
+                                );
+                                final snapshot = await FirebaseFirestore
+                                    .instance
+                                    .collection('categories')
+                                    .doc(categoriesIds[docId])
+                                    .collection('services')
+                                    .where('id',
+                                        isEqualTo: widget.details!['id'])
+                                    .get();
+                                for (QueryDocumentSnapshot doc
+                                    in snapshot.docs) {
+                                  for (var i in doc['images']) {
+                                    await FirebaseStorage.instance
+                                        .refFromURL(i)
+                                        .delete();
+                                  }
+                                  await doc.reference.delete();
+                                }
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                Navigation().pushRep(
+                                    MainBottomBarSeller(
+                                      index: 0,
+                                    ),
+                                    context);
+                              }),
+                        )
+                      : const SizedBox.shrink(),
                   SizedBox(
                     height: height * 0.034,
                   )
