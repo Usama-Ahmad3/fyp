@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maintenance/models/sell_car_model.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/utils/flushbar.dart';

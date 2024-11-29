@@ -11,7 +11,7 @@ import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/res/common_widgets/text_field_widget.dart';
 import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/view/home_screens/account_screen/edit_profile/edit_profile_widget.dart';
-import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/login_signup/text_data_widget.dart';
 
 class EditProfile extends StatefulWidget {
   final Map profile;
@@ -96,7 +96,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: height * 0.02,
               ),
-              const TextData(text: 'Name'),
+              const TextDataWidget(text: 'Name'),
               TextFieldWidget(
                 type: TextInputType.name,
                 controller: nameController,
@@ -116,7 +116,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Email'),
+              const TextDataWidget(text: 'Email'),
               TextFieldWidget(
                 controller: emailController,
                 hintText: 'admin@gmail.com',
@@ -134,7 +134,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Phone'),
+              const TextDataWidget(text: 'Phone'),
               TextFieldWidget(
                 controller: phoneController,
                 hintText: '+92 3113829383',
@@ -152,7 +152,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Date of Birth'),
+              const TextDataWidget(text: 'Date of Birth'),
               InkWell(
                 onTap: () async {
                   final date = await slecteDtateTime(context);
@@ -179,7 +179,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Role'),
+              const TextDataWidget(text: 'Role'),
               TextFieldWidget(
                 controller: roleController,
                 hintText: 'Role',
@@ -218,7 +218,6 @@ class _EditProfileState extends State<EditProfile> {
                                 error.toString(), context, "Error");
                           });
                         }
-                        print(nameController.text);
                         final url = await ref.getDownloadURL();
                         await FirebaseFirestore.instance
                             .collection('users')

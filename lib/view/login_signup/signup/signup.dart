@@ -15,7 +15,7 @@ import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/login_signup/login/login.dart';
-import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/login_signup/text_data_widget.dart';
 import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 
 import '../../../res/colors/app_colors.dart';
@@ -107,7 +107,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Name'),
+              const TextDataWidget(text: 'Name'),
               TextFieldWidget(
                 controller: nameController,
                 hintText: 'Enter Your Name',
@@ -129,7 +129,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Email'),
+              const TextDataWidget(text: 'Email'),
               TextFieldWidget(
                 controller: emailController,
                 hintText: 'Enter Your Email',
@@ -151,7 +151,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Password'),
+              const TextDataWidget(text: 'Password'),
               TextFieldWidget(
                 controller: passwordController,
                 hintText: 'Enter Your Password',
@@ -186,7 +186,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Contact'),
+              const TextDataWidget(text: 'Contact'),
               TextFieldWidget(
                 controller: contactController,
                 type: TextInputType.phone,
@@ -206,7 +206,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Address'),
+              const TextDataWidget(text: 'Address'),
               TextFieldWidget(
                 controller: addressController,
                 hintText: 'Enter Your Address',
@@ -228,7 +228,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'ID Card'),
+              const TextDataWidget(text: 'ID Card'),
               TextFieldWidget(
                 controller: idCardController,
                 hintText: 'Enter Your ID Card Number',
@@ -250,7 +250,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.01,
               ),
-              const TextData(text: 'Date of Birth'),
+              const TextDataWidget(text: 'Date of Birth'),
               InkWell(
                 onTap: () async {
                   final date = await slecteDtateTime(context);
@@ -281,7 +281,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: height * 0.02,
               ),
-              const TextData(text: 'Role'),
+              const TextDataWidget(text: 'Role'),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                 child: DropdownButton<String>(

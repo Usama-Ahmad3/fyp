@@ -11,7 +11,7 @@ import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/login_signup/forget_password/forget_password.dart';
 import 'package:maintenance/view/login_signup/signup/signup.dart';
-import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/login_signup/text_data_widget.dart';
 import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 
 class LogIn extends StatefulWidget {
@@ -71,7 +71,7 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   height: height * 0.03,
                 ),
-                const TextData(text: 'Email'),
+                const TextDataWidget(text: 'Email'),
                 TextFieldWidget(
                   controller: emailController,
                   hintText: 'admin@gmail.com',
@@ -93,7 +93,7 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   height: height * 0.01,
                 ),
-                const TextData(text: 'Password'),
+                const TextDataWidget(text: 'Password'),
                 TextFieldWidget(
                   controller: passwordController,
                   hintText: 'Password',
@@ -136,11 +136,6 @@ class _LogInState extends State<LogIn> {
                                 password: passwordController.text)
                             .then((value) async {
                           if (mounted) {
-                            await FlushBarUtils.flushBar(
-                                'Success', context, "Login Successful");
-                            setState(() {
-                              loading = false;
-                            });
                             final user = await FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(value.user?.uid)
@@ -153,6 +148,11 @@ class _LogInState extends State<LogIn> {
                                 'password': passwordController.text,
                               });
                             }
+                            await FlushBarUtils.flushBar(
+                                'Success', context, "Login Successful");
+                            setState(() {
+                              loading = false;
+                            });
                             if (user['role'] == "User") {
                               Navigation().pushRep(MainBottomBar(), context);
                             } else {

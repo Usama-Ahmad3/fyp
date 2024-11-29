@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/utils/navigator_class.dart';
-import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 
 class CongratsScreen extends StatelessWidget {

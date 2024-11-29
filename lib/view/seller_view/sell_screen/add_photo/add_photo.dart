@@ -369,6 +369,8 @@ class _AddPhotoState extends State<AddPhoto> {
                                 setState(() {
                                   loading = true;
                                 });
+
+                                ///Upload Images
                                 for (var imageIndex in image!) {
                                   String fileName = DateTime.now()
                                       .microsecondsSinceEpoch
@@ -380,7 +382,10 @@ class _AddPhotoState extends State<AddPhoto> {
                                   final url = await ref.getDownloadURL();
                                   imageLinks.add(url);
                                 }
+
+                                ///Run this part if it's updating the service
                                 if (widget.images != null) {
+                                  /// remove deleted Images of firebase
                                   if (removedNetworkImages.isNotEmpty) {
                                     for (var imagesUrl
                                         in removedNetworkImages) {
@@ -392,6 +397,8 @@ class _AddPhotoState extends State<AddPhoto> {
                                   for (var leftImages in networkImages) {
                                     imageLinks.add(leftImages);
                                   }
+
+                                  ///if category is changed then delete this instance and create another in selected category
                                   if (widget.categoryId != null) {
                                     QuerySnapshot querySnapshot =
                                         await FirebaseFirestore.instance
@@ -432,7 +439,10 @@ class _AddPhotoState extends State<AddPhoto> {
                                       Navigation().pushRep(
                                           const CongratsScreen(), context);
                                     });
-                                  } else {
+                                  }
+
+                                  ///if category is not changed then update it
+                                  else {
                                     QuerySnapshot querySnapshot =
                                         await FirebaseFirestore.instance
                                             .collection('categories')
@@ -465,7 +475,10 @@ class _AddPhotoState extends State<AddPhoto> {
                                       });
                                     }
                                   }
-                                } else {
+                                }
+
+                                ///Run this part if Creating new Service
+                                else {
                                   final categoryRef = FirebaseFirestore.instance
                                       .collection('categories')
                                       .doc(widget.detail['category_id']);

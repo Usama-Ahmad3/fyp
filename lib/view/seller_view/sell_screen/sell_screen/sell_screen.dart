@@ -7,7 +7,7 @@ import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/button_widget.dart';
 import 'package:maintenance/res/common_widgets/text_field_widget.dart';
 import 'package:maintenance/utils/navigator_class.dart';
-import 'package:maintenance/view/login_signup/widgets/text_data.dart';
+import 'package:maintenance/view/login_signup/text_data_widget.dart';
 import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
 import 'package:maintenance/view/seller_view/sell_screen/add_photo/add_photo.dart';
 import 'package:maintenance/view/seller_view/sell_screen/app_bar_widget.dart';
@@ -181,7 +181,7 @@ class _AddServiceState extends State<AddService> {
                   ),
 
                   ///name
-                  const TextData(text: 'Company Name'),
+                  const TextDataWidget(text: 'Company Name'),
                   TextFieldWidget(
                     controller: nameController,
                     hintText: 'Enter your Company name',
@@ -198,7 +198,7 @@ class _AddServiceState extends State<AddService> {
                   SizedBox(height: height * 0.025),
 
                   ///sellerType
-                  const TextData(text: 'Seller Type'),
+                  const TextDataWidget(text: 'Seller Type'),
                   InkWell(
                     onTap: () async {
                       selectChoice(
@@ -225,7 +225,7 @@ class _AddServiceState extends State<AddService> {
                   SizedBox(height: height * 0.025),
 
                   ///location
-                  const TextData(text: 'Location'),
+                  const TextDataWidget(text: 'Location'),
                   InkWell(
                     onTap: () {
                       Navigation().push(
@@ -257,7 +257,7 @@ class _AddServiceState extends State<AddService> {
                   SizedBox(height: height * 0.025),
 
                   ///Category
-                  const TextData(text: 'Category'),
+                  const TextDataWidget(text: 'Category'),
                   InkWell(
                     onTap: () {
                       selectChoice(
@@ -284,7 +284,7 @@ class _AddServiceState extends State<AddService> {
                   SizedBox(height: height * 0.025),
 
                   ///description
-                  const TextData(text: 'Description'),
+                  const TextDataWidget(text: 'Description'),
                   InkWell(
                     child: TextFieldMultiWidget(
                       controller: descriptionController,
@@ -303,7 +303,7 @@ class _AddServiceState extends State<AddService> {
                   SizedBox(height: height * 0.025),
 
                   ///Note
-                  const TextData(text: 'Special Note'),
+                  const TextDataWidget(text: 'Special Note'),
                   InkWell(
                     child: TextFieldMultiWidget(
                       controller: noteController,

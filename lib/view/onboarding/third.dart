@@ -17,7 +17,7 @@ class ThirdScreen extends StatelessWidget {
           ),
           cachedNetworkImage(
               cuisineImageUrl:
-                  'https://tse4.mm.bing.net/th?id=OIP.cgzfayHlKYHpbDGUNuKfgQHaD0&pid=Api&P=0&h=220',
+                  'https://cdn.pixabay.com/photo/2014/09/20/09/23/bargain-453490_1280.png',
               height: height * 0.4,
               imageFit: BoxFit.fill,
               errorFit: BoxFit.contain,
@@ -30,10 +30,9 @@ class ThirdScreen extends StatelessWidget {
             height,
             width,
             'Bargain like a shark' /*title*/,
-            "Sell your vehicle on Wizmo! it's easy and free" /*subtitle1*/,
+            "Sell your Services! it's easy and free" /*subtitle1*/,
             '' /*subtitle2*/,
-            'Safety buy vehicle online, read how to protect' /*text1*/,
-            'yourself view your current offers' /*text2*/,
+            'Stay Safe When Buying Services Online: Learn How to Protect Yourself and Explore Current Offers!' /*text1*/,
           )
         ],
       ),

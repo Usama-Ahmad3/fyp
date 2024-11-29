@@ -31,11 +31,10 @@ class FirstScreen extends StatelessWidget {
               context,
               height,
               width,
-              'Welcome to Wizmo' /*title*/,
+              'Welcome to Our Platform' /*title*/,
               'Experience of better way of buying and selling' /*subtitle1*/,
               '' /*subtitle2*/,
-              'Get offer from dealers and sell your car fast or' /*text1*/,
-              'view your current offers' /*text21*/,
+              'Get offer from dealers and sell your Services fast or view your current offers' /*text1*/,
             ),
             SizedBox(
               height: height * 0.09,

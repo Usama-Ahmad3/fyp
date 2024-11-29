@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/story_page.dart';
-import 'package:readmore/readmore.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:maintenance/res/authentication/authentication.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/popup.dart';
 import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/story_page.dart';
 import 'package:maintenance/view/login_signup/login/login.dart';
+import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
-import 'widgets/profile_car_detail.dart';
+import 'widgets/profile_category_detail.dart';
 
 class CategoryDetailScreen extends StatefulWidget {
   final Map userData;
@@ -294,7 +294,7 @@ class DetailScreenState extends State<CategoryDetailScreen> {
                   SizedBox(
                     height: height * 0.05,
                   ),
-                  ProfileCarDetail(
+                  ProfileCategoryDetail(
                     profile: widget.userData,
                     serviceData: widget.serviceData,
                     auth: _isLogIn,

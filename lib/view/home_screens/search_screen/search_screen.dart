@@ -11,6 +11,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  List category = [];
+  List categoryId = [];
   List ab = [];
   List abc = [
     'a',
@@ -41,19 +43,18 @@ class _SearchScreenState extends State<SearchScreen> {
   ];
 
   Future<QuerySnapshot> fetchDataFromFirebase() async {
-    return FirebaseFirestore.instance.collection('sell_car_data').get();
+    return FirebaseFirestore.instance.collection('categories').get();
   }
 
-  searchTitles(List make) {
-    for (int i = 0; i < make.length; i++) {
-      abc.forEach((element) {
-        print(make[i]);
-        print(element);
-        if (element.toString().toLowerCase() == make[i][0].toLowerCase()) {
-          print('abmmm');
+  searchTitles(List category) {
+    ab.clear();
+    for (int i = 0; i < category.length; i++) {
+      for (var element in abc) {
+        if (!(ab.contains(category[i][0].toString().toLowerCase())) &&
+            element.toString().toLowerCase() == category[i][0].toLowerCase()) {
           ab.add(element);
         }
-      });
+      }
     }
   }
 
@@ -99,12 +100,15 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: AppColors.buttonColor)),
                   );
                 } else {
-                  print(snapshot.data);
+                  category.clear();
+                  for (var i in snapshot.data!.docs) {
+                    category.add(i['name']);
+                    categoryId.add(i['id']);
+                  }
+                  searchTitles(category);
                   return Column(
                     children: [
                       ...List.generate(abc.length, (mainIndex) {
-                        var document = snapshot.data!.docs[0];
-                        searchTitles(document["make"]);
                         return ab.toString().toLowerCase().contains(
                                 abc[mainIndex].toString().toLowerCase())
                             ? LayoutBuilder(
@@ -130,14 +134,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                         ),
                                       ),
                                       ListView.builder(
-                                        itemCount: document['make'].length,
+                                        itemCount: category.length,
                                         shrinkWrap: true,
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          print(
-                                              "object ==> ${document['make'][index]}");
-                                          return document['make'][index]
+                                          return category[index]
                                                   .toString()
                                                   .toLowerCase()
                                                   .startsWith(abc[mainIndex]
@@ -146,10 +148,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ? searchWidget(
                                                   width: width,
                                                   height: height,
-                                                  modelName: document['make']
-                                                      [index],
-                                                  number:
-                                                      'value.carModel.model![index].id.toString()',
+                                                  categoryName: category[index],
+                                                  categoryId: categoryId[index],
                                                   context: context)
                                               : const SizedBox.shrink();
                                         },

@@ -76,7 +76,7 @@ class _MainOnBoardingState extends State<MainOnBoarding> {
           ),
           Positioned(
               bottom: 55,
-              left: 135,
+              left: 185,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,

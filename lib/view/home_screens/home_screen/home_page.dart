@@ -142,7 +142,7 @@ class HomePageState extends State<HomePage> {
                                       builder: (context, service) {
                                         if (service.connectionState ==
                                             ConnectionState.waiting) {
-                                          CategoryContainer(
+                                          return CategoryContainer(
                                             image: document['images'],
                                             category: document['name'],
                                             services: '',

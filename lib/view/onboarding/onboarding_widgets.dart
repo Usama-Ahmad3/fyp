@@ -10,15 +10,8 @@ Widget ImageWidget(double height, String image) {
       ));
 }
 
-Widget TextWidget(
-    BuildContext context,
-    double height,
-    double width,
-    String title,
-    String subtitle1,
-    String subtitle2,
-    String text1,
-    String text2) {
+Widget TextWidget(BuildContext context, double height, double width,
+    String title, String subtitle1, String subtitle2, String text1) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -34,6 +27,7 @@ Widget TextWidget(
             vertical: height * 0.01, horizontal: width * 0.1),
         child: Text(
           subtitle1,
+          textAlign: TextAlign.center,
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
@@ -61,21 +55,11 @@ Widget TextWidget(
         ),
         child: Text(
           text1,
+          textAlign: TextAlign.center,
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
               .copyWith(color: AppColors.black, fontSize: height * 0.018),
-        ),
-      ),
-      Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.04, vertical: height * 0.01),
-        child: Text(
-          text2,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(color: AppColors.black, fontSize: height * 0.02),
         ),
       ),
     ],

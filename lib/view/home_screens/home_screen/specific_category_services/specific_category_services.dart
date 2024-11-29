@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/empty_screen.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/category_detail.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/category_detail.dart';
 
 class SpecificCategoryServices extends StatefulWidget {
   final String id;
@@ -32,8 +32,6 @@ class _SpecificCategoryServicesState extends State<SpecificCategoryServices> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(

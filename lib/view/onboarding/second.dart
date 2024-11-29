@@ -18,7 +18,7 @@ class SecondScreen extends StatelessWidget {
             ),
             cachedNetworkImage(
                 cuisineImageUrl:
-                    'https://tse2.mm.bing.net/th?id=OIP.Tmt44ndHqXvyTP4XHbQm4wHaFj&pid=Api&P=0&h=220',
+                    'https://c7.alamy.com/comp/2PFW668/sign-displaying-buy-sell-word-for-the-buying-and-selling-of-goods-and-services-trading-merchandising-2PFW668.jpg',
                 height: height * 0.4,
                 imageFit: BoxFit.fill,
                 errorFit: BoxFit.contain,
@@ -30,11 +30,10 @@ class SecondScreen extends StatelessWidget {
               context,
               height,
               width,
-              'Buy and Sell cars' /*title*/,
-              "You don't have to be a mechanic to make " /*subtitle1*/,
-              'a little money on used cars' /*subtitle2*/,
-              'selling Cars at Their Highest Value!' /*text1*/,
-              '' /*text2*/,
+              'Buy and Sell Services' /*title*/,
+              "You don't have to be an expert to earn or save money by connecting with the right service" /*subtitle1*/,
+              '' /*subtitle2*/,
+              'Offering Services at Their Maximum Value!' /*text1*/,
             )
           ],
         ),
