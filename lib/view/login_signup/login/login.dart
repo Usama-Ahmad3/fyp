@@ -135,27 +135,32 @@ class _LogInState extends State<LogIn> {
                                 email: emailController.text,
                                 password: passwordController.text)
                             .then((value) async {
-                          emailController.clear();
-                          passwordController.clear();
                           if (mounted) {
                             await FlushBarUtils.flushBar(
                                 'Success', context, "Login Successful");
                             setState(() {
                               loading = false;
                             });
-                            print(value.user?.uid);
                             final user = await FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(value.user?.uid)
                                 .get();
-                            print("**********************");
-                            print(user['role']);
+                            if (passwordController.text != user['password']) {
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(user['id'])
+                                  .update({
+                                'password': passwordController.text,
+                              });
+                            }
                             if (user['role'] == "User") {
                               Navigation().pushRep(MainBottomBar(), context);
                             } else {
                               Navigation()
                                   .pushRep(MainBottomBarSeller(), context);
                             }
+                            emailController.clear();
+                            passwordController.clear();
                             await Authentication().saveLogin(true);
                           }
                         }).onError((error, stackTrace) {

@@ -97,18 +97,15 @@ class _SignUpState extends State<SignUp> {
                   imageFit: BoxFit.fill,
                   errorFit: BoxFit.contain,
                   width: width),
-              SizedBox(
-                height: height * 0.015,
-              ),
               Center(
                 child: Text(
-                  'Get started now with Maintenance & Repairing Services',
+                  'Get started now',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold, color: AppColors.black),
                 ),
               ),
               SizedBox(
-                height: height * 0.015,
+                height: height * 0.01,
               ),
               const TextData(text: 'Name'),
               TextFieldWidget(

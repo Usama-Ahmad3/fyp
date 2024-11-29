@@ -26,7 +26,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Forget Password'),
+        title: Text(
+          'Forget Password',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: AppColors.black),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -41,9 +47,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.08, vertical: height * 0.01),
+                    horizontal: width * 0.03, vertical: height * 0.01),
                 child: Text(
                   'Enter Your Registered Email To Reset Your Password',
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -86,6 +93,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         "Send Successfully");
                     setState(() {
                       loading = false;
+                      Navigator.pop(context);
                     });
                   });
                 },
@@ -99,7 +107,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 children: [
                   Text(
                     "Don't have an account?",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                   SizedBox(
                     width: width * 0.01,
@@ -112,7 +120,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         "Signup",
                         style: Theme.of(context)
                             .textTheme
-                            .bodyLarge!
+                            .titleSmall!
                             .copyWith(color: AppColors.red),
                       )),
                 ],
