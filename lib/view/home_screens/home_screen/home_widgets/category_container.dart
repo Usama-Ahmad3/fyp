@@ -117,7 +117,9 @@ class _CategoryContainerState extends State<CategoryContainer> {
                     child: Padding(
                   padding: const EdgeInsets.all(3),
                   child: Text(
-                    widget.category,
+                    widget.category.length > 35
+                        ? widget.category.substring(0, 35)
+                        : widget.category,
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!

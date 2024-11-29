@@ -15,17 +15,17 @@ import 'package:maintenance/view/login_signup/login/login.dart';
 
 import 'widgets/profile_car_detail.dart';
 
-class CarDetailScreen extends StatefulWidget {
+class CategoryDetailScreen extends StatefulWidget {
   final Map userData;
   final Map serviceData;
-  const CarDetailScreen(
+  const CategoryDetailScreen(
       {super.key, required this.userData, required this.serviceData});
 
   @override
-  State<CarDetailScreen> createState() => DetailScreenState();
+  State<CategoryDetailScreen> createState() => DetailScreenState();
 }
 
-class DetailScreenState extends State<CarDetailScreen> {
+class DetailScreenState extends State<CategoryDetailScreen> {
   bool _isLogIn = false;
   bool loading = true;
   var isDialOpen = ValueNotifier<bool>(false);
@@ -201,7 +201,7 @@ class DetailScreenState extends State<CarDetailScreen> {
                     onTap: () {
                       navigateToStory();
                     },
-                    category: widget.userData['name'],
+                    category: widget.serviceData['location'],
                     image: widget.serviceData['images'],
                     services: widget.serviceData['company_name'],
                     isCompany: true,
@@ -223,6 +223,40 @@ class DetailScreenState extends State<CarDetailScreen> {
                             .titleMedium!
                             .copyWith(color: AppColors.black),
                       ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        'Seller Message:',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.black),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    child: ReadMoreText(
+                      widget.serviceData['message'],
+                      trimLength: 2,
+                      trimMode: TrimMode.Line,
+                      lessStyle: TextStyle(
+                          color: AppColors.black, fontWeight: FontWeight.bold),
+                      moreStyle: TextStyle(
+                          color: AppColors.black, fontWeight: FontWeight.bold),
+                      trimCollapsedText: 'See More',
+                      trimExpandedText: 'See Less',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(color: AppColors.black),
                     ),
                   ),
                   SizedBox(

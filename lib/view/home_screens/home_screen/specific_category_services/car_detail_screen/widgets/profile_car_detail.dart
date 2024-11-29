@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/car_detail_screen.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/car_detail_screen/category_detail.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:maintenance/models/dynamic_car_detail_model.dart';
 import 'package:maintenance/res/colors/app_colors.dart';

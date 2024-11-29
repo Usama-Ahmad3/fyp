@@ -412,7 +412,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                     await categoryRef
                                         .collection('services')
                                         .add({
-                                      'about': widget.detail['about'],
+                                      'note': widget.detail['note'],
                                       'company_name':
                                           widget.detail['company_name'],
                                       'seller_type':
@@ -444,7 +444,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                     for (QueryDocumentSnapshot doc
                                         in querySnapshot.docs) {
                                       await doc.reference.update({
-                                        'about': widget.detail['about'],
+                                        'note': widget.detail['note'],
                                         'company_name':
                                             widget.detail['company_name'],
                                         'seller_type':
@@ -470,7 +470,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                       .collection('categories')
                                       .doc(widget.detail['category_id']);
                                   await categoryRef.collection('services').add({
-                                    'about': widget.detail['about'],
+                                    'note': widget.detail['note'],
                                     'company_name':
                                         widget.detail['company_name'],
                                     'seller_type': widget.detail['seller_type'],

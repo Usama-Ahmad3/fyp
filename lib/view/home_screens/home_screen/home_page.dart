@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/empty_screen.dart';
+import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/images.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
@@ -30,6 +31,14 @@ class HomePageState extends State<HomePage> {
     AppImages.image6,
     AppImages.image7,
   ];
+  Future<QuerySnapshot> serviceProviders(String categoryId) async {
+    return FirebaseFirestore.instance
+        .collection('categories')
+        .doc(categoryId)
+        .collection('services')
+        .get();
+  }
+
   static bool loading = false;
   @override
   void initState() {
@@ -128,17 +137,96 @@ class HomePageState extends State<HomePage> {
                                   ...List.generate(snapshot.data!.docs.length,
                                       (index) {
                                     var document = snapshot.data!.docs[index];
-                                    return CategoryContainer(
-                                      image: document['images'],
-                                      category: document['name'],
-                                      services:
-                                          document['images'].length.toString(),
-                                      onTap: () {
-                                        print(document['id']);
-                                        Navigation().push(
-                                            SpecificCategoryServices(
-                                                id: document['id']),
-                                            context);
+                                    return FutureBuilder(
+                                      future: serviceProviders(document['id']),
+                                      builder: (context, service) {
+                                        if (service.connectionState ==
+                                            ConnectionState.waiting) {
+                                          CategoryContainer(
+                                            image: document['images'],
+                                            category: document['name'],
+                                            services: '',
+                                            onTap: () {
+                                              try {
+                                                if (service
+                                                    .data!.docs.isNotEmpty) {
+                                                  Navigation().push(
+                                                      SpecificCategoryServices(
+                                                          id: document['id']),
+                                                      context);
+                                                } else {
+                                                  FlushBarUtils.flushBar(
+                                                      "No Service Found",
+                                                      context,
+                                                      "Message");
+                                                }
+                                              } catch (e) {
+                                                FlushBarUtils.flushBar(
+                                                    "No Service Found",
+                                                    context,
+                                                    "Message");
+                                              }
+                                            },
+                                          );
+                                        }
+                                        if (service.hasData) {
+                                          return CategoryContainer(
+                                            image: document['images'],
+                                            category: document['name'],
+                                            services: service.data!.docs.isEmpty
+                                                ? "Nothing Found"
+                                                : service.data!.docs.length
+                                                    .toString(),
+                                            onTap: () {
+                                              try {
+                                                if (service
+                                                    .data!.docs.isNotEmpty) {
+                                                  Navigation().push(
+                                                      SpecificCategoryServices(
+                                                          id: document['id']),
+                                                      context);
+                                                } else {
+                                                  FlushBarUtils.flushBar(
+                                                      "No Service Found",
+                                                      context,
+                                                      "Message");
+                                                }
+                                              } catch (e) {
+                                                FlushBarUtils.flushBar(
+                                                    "No Service Found",
+                                                    context,
+                                                    "Message");
+                                              }
+                                            },
+                                          );
+                                        } else {
+                                          return CategoryContainer(
+                                            image: document['images'],
+                                            category: document['name'],
+                                            services: 'Nothing Found',
+                                            onTap: () {
+                                              try {
+                                                if (service
+                                                    .data!.docs.isNotEmpty) {
+                                                  Navigation().push(
+                                                      SpecificCategoryServices(
+                                                          id: document['id']),
+                                                      context);
+                                                } else {
+                                                  FlushBarUtils.flushBar(
+                                                      "No Service Found",
+                                                      context,
+                                                      "Message");
+                                                }
+                                              } catch (e) {
+                                                FlushBarUtils.flushBar(
+                                                    "No Service Found",
+                                                    context,
+                                                    "Message");
+                                              }
+                                            },
+                                          );
+                                        }
                                       },
                                     );
                                   }),

@@ -27,7 +27,7 @@ class _AddServiceState extends State<AddService> {
   final nameController = TextEditingController();
   final locationController = TextEditingController();
   final descriptionController = TextEditingController();
-  final aboutController = TextEditingController();
+  final noteController = TextEditingController();
   final categoryController = TextEditingController();
   List categories = [];
   List categoriesIds = [];
@@ -140,7 +140,7 @@ class _AddServiceState extends State<AddService> {
     locationController.text = widget.details?['location'];
     categoryController.text = widget.details?['category'];
     descriptionController.text = widget.details?['description'];
-    aboutController.text = widget.details?['about'];
+    noteController.text = widget.details?['note'];
     latitude = widget.details?['latitude'];
     longitude = widget.details?['longitude'];
   }
@@ -302,15 +302,15 @@ class _AddServiceState extends State<AddService> {
                   ),
                   SizedBox(height: height * 0.025),
 
-                  ///About Yourself
-                  const TextData(text: 'About Yourself'),
+                  ///Note
+                  const TextData(text: 'Special Note'),
                   InkWell(
                     child: TextFieldMultiWidget(
-                      controller: aboutController,
-                      hintText: 'Write About Yourself',
+                      controller: noteController,
+                      hintText: 'Write a special note for service seeker',
                       onValidate: (value) {
                         if (value.isEmpty) {
-                          return "about yourself field can't empty";
+                          return "special note field can't empty";
                         }
                         return null;
                       },
@@ -332,7 +332,7 @@ class _AddServiceState extends State<AddService> {
                               "company_name": nameController.text,
                               "seller_type": sellerTypeController.text,
                               "description": descriptionController.text,
-                              'about': aboutController.text,
+                              'note': noteController.text,
                               "location": locationController.text,
                               'latitude': latitude,
                               'longitude': longitude,
