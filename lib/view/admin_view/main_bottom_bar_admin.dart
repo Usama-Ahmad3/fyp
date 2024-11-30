@@ -4,27 +4,24 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/popup.dart';
-import 'package:maintenance/utils/flushbar.dart';
+import 'package:maintenance/view/admin_view/admin_home.dart';
+import 'package:maintenance/view/admin_view/all_users/all_users.dart';
 import 'package:maintenance/view/home_screens/account_screen/account_screen.dart';
 import 'package:maintenance/view/seller_view/home.dart';
 
-import 'sell_screen/sell_screen/sell_screen.dart';
-
 // ignore: must_be_immutable
-class MainBottomBarSeller extends StatefulWidget {
+class MainBottomBarAdmin extends StatefulWidget {
   int index;
-  final String status;
-  MainBottomBarSeller({
+  MainBottomBarAdmin({
     super.key,
     this.index = 0,
-    this.status = "active",
   });
 
   @override
-  State<MainBottomBarSeller> createState() => _MainBottomBarSellerState();
+  State<MainBottomBarAdmin> createState() => _MainBottomBarAdminState();
 }
 
-class _MainBottomBarSellerState extends State<MainBottomBarSeller> {
+class _MainBottomBarAdminState extends State<MainBottomBarAdmin> {
   popupDialog(
       {required BuildContext context,
       required String text,
@@ -46,27 +43,14 @@ class _MainBottomBarSellerState extends State<MainBottomBarSeller> {
 
   int _initialIndex = 0;
   final page = [
-    const Home(
-      status: '',
-    ),
-    const AddService(),
+    const AdminHome(),
+    const AllUsers(),
     const AccountScreen(),
   ];
   pageChange(int index) {
-    if (widget.status == 'active') {
-      _initialIndex = index;
-      widget.index = index;
-      setState(() {});
-    } else {
-      if (index == 1) {
-        FlushBarUtils.flushBar(
-            "Your Account Status is ${widget.status}", context, "Information");
-      } else {
-        _initialIndex = index;
-        widget.index = index;
-        setState(() {});
-      }
-    }
+    _initialIndex = index;
+    widget.index = index;
+    setState(() {});
   }
 
   @override
@@ -82,14 +66,14 @@ class _MainBottomBarSellerState extends State<MainBottomBarSeller> {
           disableDefaultTabController: false,
           items: const [
             TabItem(
-              icon: Icons.home_outlined,
+              icon: Icons.request_page,
               activeIcon: Icons.home,
-              title: 'Home',
+              title: 'Requests',
             ),
             TabItem(
-                icon: Icons.sell_outlined,
-                title: 'Add Service',
-                activeIcon: Icons.sell),
+                icon: Icons.person,
+                title: 'All Users',
+                activeIcon: Icons.person_2_outlined),
             TabItem(
                 icon: Icons.account_circle_outlined,
                 title: 'Account',
@@ -102,11 +86,7 @@ class _MainBottomBarSellerState extends State<MainBottomBarSeller> {
             pageChange(index);
           },
         ),
-        body: _initialIndex == 0
-            ? Home(
-                status: widget.status,
-              )
-            : page[_initialIndex],
+        body: page[_initialIndex],
       ),
     );
   }

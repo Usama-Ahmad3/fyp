@@ -8,6 +8,7 @@ import 'package:maintenance/res/common_widgets/cashed_image.dart';
 import 'package:maintenance/res/common_widgets/text_field_widget.dart';
 import 'package:maintenance/utils/flushbar.dart';
 import 'package:maintenance/utils/navigator_class.dart';
+import 'package:maintenance/view/admin_view/main_bottom_bar_admin.dart';
 import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/login_signup/forget_password/forget_password.dart';
 import 'package:maintenance/view/login_signup/signup/signup.dart';
@@ -140,13 +141,22 @@ class _LogInState extends State<LogIn> {
                                 .collection('users')
                                 .doc(value.user?.uid)
                                 .get();
-                            if (passwordController.text != user['password']) {
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(user['id'])
-                                  .update({
-                                'password': passwordController.text,
-                              });
+                            try {
+                              if (passwordController.text != user['password']) {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user['id'])
+                                    .update({
+                                  'password': passwordController.text,
+                                });
+                              }
+                            } catch (e) {
+                              FlushBarUtils.flushBar(
+                                  "Your Account Is Deleted By Admin",
+                                  context,
+                                  "Policy Voilation");
+                              auth.signOut();
+                              return;
                             }
                             await FlushBarUtils.flushBar(
                                 'Success', context, "Login Successful");
@@ -154,16 +164,27 @@ class _LogInState extends State<LogIn> {
                               loading = false;
                             });
                             if (user['role'] == "User") {
-                              Navigation().pushRep(MainBottomBar(), context);
+                              Navigation().pushRep(
+                                  MainBottomBar(
+                                    status: user['status'],
+                                  ),
+                                  context);
+                            } else if (user['role'] == "Seller") {
+                              Navigation().pushRep(
+                                  MainBottomBarSeller(
+                                    status: user['status'],
+                                  ),
+                                  context);
                             } else {
                               Navigation()
-                                  .pushRep(MainBottomBarSeller(), context);
+                                  .pushRep(MainBottomBarAdmin(), context);
                             }
                             emailController.clear();
                             passwordController.clear();
                             await Authentication().saveLogin(true);
                           }
                         }).onError((error, stackTrace) {
+                          print(error);
                           FlushBarUtils.flushBar(
                               error.toString(), context, "Error Catch");
                           setState(() {

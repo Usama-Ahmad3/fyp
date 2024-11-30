@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/authentication/authentication.dart';
 import 'package:maintenance/utils/images.dart';
+import 'package:maintenance/view/admin_view/main_bottom_bar_admin.dart';
 import 'package:maintenance/view/home_screens/main_bottom_bar/main_bottom_bar.dart';
 import 'package:maintenance/view/onboarding/main_onboarding.dart';
 import 'package:maintenance/view/seller_view/main_bottom_bar_seller.dart';
@@ -19,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool isUser = false;
   bool walk = false;
   bool isLoggedIn = false;
+  String status = '';
   @override
   void initState() {
     init();
@@ -34,35 +36,46 @@ class _SplashScreenState extends State<SplashScreen> {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(id).get();
       isUser = userDoc['role'] == "User";
+      if (userDoc['role'] != "Admin") {
+        status = userDoc['status'];
+      }
       isLoggedIn = true;
       await Authentication().saveLogin(true);
     } else {
       isLoggedIn = false;
     }
     await Future.delayed(const Duration(seconds: 3));
-    walk
-        ? isUser
-            ? Navigator.pushReplacement(
+    if (walk) {
+      if (isUser) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainBottomBar(
+                      status: status,
+                    )));
+      } else {
+        ///means it's admin account
+        if (status.isEmpty) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => MainBottomBarAdmin()));
+        } else {
+          if (isLoggedIn) {
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MainBottomBar(
-                          index: 0,
-                        )))
-            : isLoggedIn
-                ? Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainBottomBarSeller(
-                              index: 0,
-                            )))
-                : Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainBottomBar(
-                              index: 0,
-                            )))
-        : Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const MainOnBoarding()));
+                    builder: (context) => MainBottomBarSeller(
+                          status: status,
+                        )));
+          } else {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => MainBottomBar()));
+          }
+        }
+      }
+    } else {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const MainOnBoarding()));
+    }
   }
 
   @override

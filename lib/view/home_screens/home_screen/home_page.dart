@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/empty_screen.dart';
@@ -8,9 +9,11 @@ import 'package:maintenance/utils/images.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
 import 'package:maintenance/view/home_screens/home_screen/specific_category_services/specific_category_services.dart';
+import 'package:restart_app/restart_app.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String status;
+  const HomePage({super.key, required this.status});
 
   @override
   State<HomePage> createState() => HomePageState();
@@ -39,6 +42,19 @@ class HomePageState extends State<HomePage> {
         .get();
   }
 
+  checkAccountStatus() async {
+    final user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    final userData = user.data();
+    if (userData?['status'] != widget.status) {
+      Restart.restartApp(
+          notificationBody: 'Account Status is Changed',
+          notificationTitle: "Restart App");
+    }
+  }
+
   static bool loading = false;
   @override
   void initState() {
@@ -55,6 +71,7 @@ class HomePageState extends State<HomePage> {
         displacement: 200,
         onRefresh: () async {
           loading = true;
+          checkAccountStatus();
           Future.delayed(const Duration(seconds: 2), () {
             loading = false;
             setState(() {});
@@ -64,6 +81,7 @@ class HomePageState extends State<HomePage> {
             ? const Center(child: CircularProgressIndicator())
             : Scaffold(
                 body: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -100,151 +118,178 @@ class HomePageState extends State<HomePage> {
                       SizedBox(
                         height: height * 0.03,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: width * 0.04, vertical: height * 0.008),
-                        child: Text(
-                          'Categories',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: AppColors.black),
-                        ),
-                      ),
-                      FutureBuilder(
-                        future: fetchDataFromFirebase(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (!snapshot.hasData) {
-                              return Padding(
-                                padding: EdgeInsets.only(top: height * 0.02),
-                                child: EmptyScreen(
-                                    text: 'No Data Found', text2: ''),
-                              );
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return SizedBox(
-                                height: height * 0.4,
-                                child: Center(
-                                    child: CircularProgressIndicator(
-                                        color: AppColors.buttonColor)),
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  ...List.generate(snapshot.data!.docs.length,
-                                      (index) {
-                                    var document = snapshot.data!.docs[index];
-                                    return FutureBuilder(
-                                      future: serviceProviders(document['id']),
-                                      builder: (context, service) {
-                                        if (service.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CategoryContainer(
-                                            image: document['images'],
-                                            category: document['name'],
-                                            services: '',
-                                            onTap: () {
-                                              try {
-                                                if (service
-                                                    .data!.docs.isNotEmpty) {
-                                                  Navigation().push(
-                                                      SpecificCategoryServices(
-                                                          id: document['id']),
-                                                      context);
-                                                } else {
-                                                  FlushBarUtils.flushBar(
-                                                      "No Service Found",
-                                                      context,
-                                                      "Message");
-                                                }
-                                              } catch (e) {
-                                                FlushBarUtils.flushBar(
-                                                    "No Service Found",
-                                                    context,
-                                                    "Message");
-                                              }
-                                            },
-                                          );
-                                        }
-                                        if (service.hasData) {
-                                          return CategoryContainer(
-                                            image: document['images'],
-                                            category: document['name'],
-                                            services: service.data!.docs.isEmpty
-                                                ? "Nothing Found"
-                                                : service.data!.docs.length
-                                                    .toString(),
-                                            onTap: () {
-                                              try {
-                                                if (service
-                                                    .data!.docs.isNotEmpty) {
-                                                  Navigation().push(
-                                                      SpecificCategoryServices(
-                                                          id: document['id']),
-                                                      context);
-                                                } else {
-                                                  FlushBarUtils.flushBar(
-                                                      "No Service Found",
-                                                      context,
-                                                      "Message");
-                                                }
-                                              } catch (e) {
-                                                FlushBarUtils.flushBar(
-                                                    "No Service Found",
-                                                    context,
-                                                    "Message");
-                                              }
-                                            },
-                                          );
-                                        } else {
-                                          return CategoryContainer(
-                                            image: document['images'],
-                                            category: document['name'],
-                                            services: 'Nothing Found',
-                                            onTap: () {
-                                              try {
-                                                if (service
-                                                    .data!.docs.isNotEmpty) {
-                                                  Navigation().push(
-                                                      SpecificCategoryServices(
-                                                          id: document['id']),
-                                                      context);
-                                                } else {
-                                                  FlushBarUtils.flushBar(
-                                                      "No Service Found",
-                                                      context,
-                                                      "Message");
-                                                }
-                                              } catch (e) {
-                                                FlushBarUtils.flushBar(
-                                                    "No Service Found",
-                                                    context,
-                                                    "Message");
-                                              }
-                                            },
-                                          );
-                                        }
-                                      },
-                                    );
-                                  }),
-                                ],
-                              );
-                            }
-                          } else {
-                            return SizedBox(
-                              height: height * 0.4,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.buttonColor,
+                      widget.status != 'active'
+                          ? Padding(
+                              padding: EdgeInsets.only(top: height * 0.02),
+                              child: EmptyScreen(
+                                  text: 'Your Account is ${widget.status}',
+                                  text2:
+                                      'Contact Support Team For Further Details'),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width * 0.04,
+                                      vertical: height * 0.008),
+                                  child: Text(
+                                    'Categories',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: AppColors.black),
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                                FutureBuilder(
+                                  future: fetchDataFromFirebase(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (!snapshot.hasData) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              top: height * 0.02),
+                                          child: EmptyScreen(
+                                              text: 'No Data Found', text2: ''),
+                                        );
+                                      }
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return SizedBox(
+                                          height: height * 0.4,
+                                          child: Center(
+                                              child: CircularProgressIndicator(
+                                                  color:
+                                                      AppColors.buttonColor)),
+                                        );
+                                      } else {
+                                        return Column(
+                                          children: [
+                                            ...List.generate(
+                                                snapshot.data!.docs.length,
+                                                (index) {
+                                              var document =
+                                                  snapshot.data!.docs[index];
+                                              return FutureBuilder(
+                                                future: serviceProviders(
+                                                    document['id']),
+                                                builder: (context, service) {
+                                                  if (service.connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return CategoryContainer(
+                                                      image: document['images'],
+                                                      category:
+                                                          document['name'],
+                                                      services: '',
+                                                      onTap: () {
+                                                        try {
+                                                          if (service.data!.docs
+                                                              .isNotEmpty) {
+                                                            Navigation().push(
+                                                                SpecificCategoryServices(
+                                                                    id: document[
+                                                                        'id']),
+                                                                context);
+                                                          } else {
+                                                            FlushBarUtils.flushBar(
+                                                                "No Service Found",
+                                                                context,
+                                                                "Message");
+                                                          }
+                                                        } catch (e) {
+                                                          FlushBarUtils.flushBar(
+                                                              "No Service Found",
+                                                              context,
+                                                              "Message");
+                                                        }
+                                                      },
+                                                    );
+                                                  }
+                                                  if (service.hasData) {
+                                                    return CategoryContainer(
+                                                      image: document['images'],
+                                                      category:
+                                                          document['name'],
+                                                      services: service.data!
+                                                              .docs.isEmpty
+                                                          ? "Nothing Found"
+                                                          : service
+                                                              .data!.docs.length
+                                                              .toString(),
+                                                      onTap: () {
+                                                        try {
+                                                          if (service.data!.docs
+                                                              .isNotEmpty) {
+                                                            Navigation().push(
+                                                                SpecificCategoryServices(
+                                                                    id: document[
+                                                                        'id']),
+                                                                context);
+                                                          } else {
+                                                            FlushBarUtils.flushBar(
+                                                                "No Service Found",
+                                                                context,
+                                                                "Message");
+                                                          }
+                                                        } catch (e) {
+                                                          FlushBarUtils.flushBar(
+                                                              "No Service Found",
+                                                              context,
+                                                              "Message");
+                                                        }
+                                                      },
+                                                    );
+                                                  } else {
+                                                    return CategoryContainer(
+                                                      image: document['images'],
+                                                      category:
+                                                          document['name'],
+                                                      services: 'Nothing Found',
+                                                      onTap: () {
+                                                        try {
+                                                          if (service.data!.docs
+                                                              .isNotEmpty) {
+                                                            Navigation().push(
+                                                                SpecificCategoryServices(
+                                                                    id: document[
+                                                                        'id']),
+                                                                context);
+                                                          } else {
+                                                            FlushBarUtils.flushBar(
+                                                                "No Service Found",
+                                                                context,
+                                                                "Message");
+                                                          }
+                                                        } catch (e) {
+                                                          FlushBarUtils.flushBar(
+                                                              "No Service Found",
+                                                              context,
+                                                              "Message");
+                                                        }
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            }),
+                                          ],
+                                        );
+                                      }
+                                    } else {
+                                      return SizedBox(
+                                        height: height * 0.4,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.buttonColor,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            )
                     ],
                   ),
                 ),

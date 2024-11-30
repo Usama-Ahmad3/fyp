@@ -183,7 +183,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                           snapshot.data['date_of_birth'],
                                       'profile_image':
                                           snapshot.data['profile_image'],
-                                      'role': snapshot.data['role']
+                                      'role': snapshot.data['role'],
+                                      'status': snapshot.data['status']
                                     };
                                     navigateToEditProfile(profile);
                                   },

@@ -455,6 +455,7 @@ class _SignUpState extends State<SignUp> {
                           'id_card': idCardController.text,
                           'profile_image': url,
                           'id': id,
+                          'status': _role == "User" ? "active" : 'pending',
                           'role': _role
                         });
                         await Authentication().saveLogin(true);
@@ -545,6 +546,10 @@ class _SignUpState extends State<SignUp> {
   navigateToHomeScreen(bool isUser) {
     isUser
         ? Navigation().pushRep(MainBottomBar(), context)
-        : Navigation().pushRep(MainBottomBarSeller(), context);
+        : Navigation().pushRep(
+            MainBottomBarSeller(
+              status: 'pending',
+            ),
+            context);
   }
 }

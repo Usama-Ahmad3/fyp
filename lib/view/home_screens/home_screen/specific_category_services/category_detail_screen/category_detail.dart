@@ -244,7 +244,7 @@ class DetailScreenState extends State<CategoryDetailScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: ReadMoreText(
-                      widget.serviceData['message'],
+                      widget.serviceData['note'],
                       trimLength: 2,
                       trimMode: TrimMode.Line,
                       lessStyle: TextStyle(

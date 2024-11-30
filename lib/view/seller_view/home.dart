@@ -9,9 +9,11 @@ import 'package:maintenance/utils/images.dart';
 import 'package:maintenance/utils/navigator_class.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
 import 'package:maintenance/view/seller_view/sell_screen/sell_screen/sell_screen.dart';
+import 'package:restart_app/restart_app.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final String status;
+  const Home({super.key, required this.status});
 
   @override
   State<Home> createState() => HomeState();
@@ -46,6 +48,19 @@ class HomeState extends State<Home> {
     }
   }
 
+  checkAccountStatus() async {
+    final user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    final userData = user.data();
+    if (userData?['status'] != widget.status) {
+      Restart.restartApp(
+          notificationBody: 'Account Status is Changed',
+          notificationTitle: "Restart App");
+    }
+  }
+
   final List<String> carouselImageList = [
     AppImages.image0,
     AppImages.image1,
@@ -72,6 +87,7 @@ class HomeState extends State<Home> {
         displacement: 200,
         onRefresh: () async {
           loading = true;
+          checkAccountStatus();
           Future.delayed(const Duration(seconds: 2), () {
             loading = false;
             setState(() {});
@@ -81,6 +97,7 @@ class HomeState extends State<Home> {
             ? const Center(child: CircularProgressIndicator())
             : Scaffold(
                 body: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -117,94 +134,114 @@ class HomeState extends State<Home> {
                       SizedBox(
                         height: height * 0.03,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: width * 0.04, vertical: height * 0.008),
-                        child: Text(
-                          'My Services',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: AppColors.black),
-                        ),
-                      ),
-                      FutureBuilder(
-                        future: getServicesByUserId(
-                            FirebaseAuth.instance.currentUser!.uid),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            if (!snapshot.hasData) {
-                              return Padding(
-                                padding: EdgeInsets.only(top: height * 0.02),
-                                child: EmptyScreen(
-                                    text: 'No Data Found', text2: ''),
-                              );
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return SizedBox(
-                                height: height * 0.4,
-                                child: Center(
-                                    child: CircularProgressIndicator(
-                                        color: AppColors.buttonColor)),
-                              );
-                            } else {
-                              if (snapshot.data != null &&
-                                  snapshot.data!.isNotEmpty) {
-                                return Column(
-                                  children: [
-                                    ...List.generate(snapshot.data!.length,
-                                        (index) {
-                                      var data = snapshot.data![index];
-                                      DateTime dateTime =
-                                          data['created_at'].toDate();
-                                      final time = DateFormat(
-                                              'dd MMMM yyyy \'at\' hh:mm a')
-                                          .format(
-                                        DateTime(
-                                            dateTime.year,
-                                            dateTime.month,
-                                            dateTime.day,
-                                            dateTime.hour,
-                                            dateTime.minute,
-                                            dateTime.second),
-                                      );
-                                      return CategoryContainer(
-                                        image: data['images'],
-                                        category: time,
-                                        isCompany: true,
-                                        services: data['company_name'],
-                                        onTap: () {
-                                          Navigation().push(
-                                              AddService(
-                                                details: data,
-                                              ),
-                                              context);
-                                        },
-                                      );
-                                    }),
-                                  ],
-                                );
-                              } else {
-                                return Center(
-                                  child: EmptyScreen(
-                                      text: "No Data Found", text2: ''),
-                                );
-                              }
-                            }
-                          } else {
-                            return SizedBox(
-                              height: height * 0.4,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.buttonColor,
+                      widget.status != 'active'
+                          ? Padding(
+                              padding: EdgeInsets.only(top: height * 0.02),
+                              child: EmptyScreen(
+                                  text: 'Account Approval is ${widget.status}',
+                                  text2:
+                                      'Contact Support Team For Further Details'),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width * 0.04,
+                                      vertical: height * 0.008),
+                                  child: Text(
+                                    'My Services',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: AppColors.black),
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                                FutureBuilder(
+                                  future: getServicesByUserId(
+                                      FirebaseAuth.instance.currentUser!.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (!snapshot.hasData) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              top: height * 0.02),
+                                          child: EmptyScreen(
+                                              text: 'No Data Found', text2: ''),
+                                        );
+                                      }
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return SizedBox(
+                                          height: height * 0.4,
+                                          child: Center(
+                                              child: CircularProgressIndicator(
+                                                  color:
+                                                      AppColors.buttonColor)),
+                                        );
+                                      } else {
+                                        if (snapshot.data != null &&
+                                            snapshot.data!.isNotEmpty) {
+                                          return Column(
+                                            children: [
+                                              ...List.generate(
+                                                  snapshot.data!.length,
+                                                  (index) {
+                                                var data =
+                                                    snapshot.data![index];
+                                                DateTime dateTime =
+                                                    data['created_at'].toDate();
+                                                final time = DateFormat(
+                                                        'dd MMMM yyyy \'at\' hh:mm a')
+                                                    .format(
+                                                  DateTime(
+                                                      dateTime.year,
+                                                      dateTime.month,
+                                                      dateTime.day,
+                                                      dateTime.hour,
+                                                      dateTime.minute,
+                                                      dateTime.second),
+                                                );
+                                                return CategoryContainer(
+                                                  image: data['images'],
+                                                  category: time,
+                                                  isCompany: true,
+                                                  services:
+                                                      data['company_name'],
+                                                  onTap: () {
+                                                    Navigation().push(
+                                                        AddService(
+                                                          details: data,
+                                                        ),
+                                                        context);
+                                                  },
+                                                );
+                                              }),
+                                            ],
+                                          );
+                                        } else {
+                                          return Center(
+                                            child: EmptyScreen(
+                                                text: "No Data Found",
+                                                text2: ''),
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      return SizedBox(
+                                        height: height * 0.4,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.buttonColor,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            )
                     ],
                   ),
                 ),

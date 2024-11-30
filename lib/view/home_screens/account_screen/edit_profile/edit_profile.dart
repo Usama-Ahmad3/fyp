@@ -27,8 +27,9 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController dobController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController roleController = TextEditingController();
+  TextEditingController statusController = TextEditingController();
   bool loading = false;
-  Future<DateTime?> slecteDtateTime(BuildContext context) => showDatePicker(
+  Future<DateTime?> selectDateTime(BuildContext context) => showDatePicker(
         context: context,
         // initialDate: DateTime(),
         firstDate: DateTime(2023),
@@ -64,6 +65,7 @@ class _EditProfileState extends State<EditProfile> {
     phoneController.text = widget.profile['phone_number'];
     dobController.text = widget.profile['date_of_birth'];
     roleController.text = widget.profile['role'];
+    statusController.text = widget.profile['status'];
     super.initState();
   }
 
@@ -155,7 +157,7 @@ class _EditProfileState extends State<EditProfile> {
               const TextDataWidget(text: 'Date of Birth'),
               InkWell(
                 onTap: () async {
-                  final date = await slecteDtateTime(context);
+                  final date = await selectDateTime(context);
                   if (date != null) {
                     dobController.text = formatter.format(date).toString();
                   }
@@ -180,20 +182,39 @@ class _EditProfileState extends State<EditProfile> {
                 height: height * 0.01,
               ),
               const TextDataWidget(text: 'Role'),
-              TextFieldWidget(
-                controller: roleController,
-                hintText: 'Role',
-                prefixIcon: Icons.person,
-                enable: false,
-                onValidate: (value) {
-                  if (value.isEmpty) {
-                    return "Date of Birth field can't empty";
-                  }
-                  return null;
+              InkWell(
+                onTap: () {
+                  FlushBarUtils.flushBar(
+                      "Can't Edit This Field", context, "Information");
                 },
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(height * 0.034),
-                    borderSide: BorderSide(color: AppColors.white)),
+                child: TextFieldWidget(
+                  controller: roleController,
+                  hintText: 'Role',
+                  prefixIcon: Icons.person,
+                  enable: false,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(height * 0.034),
+                      borderSide: BorderSide(color: AppColors.white)),
+                ),
+              ),
+              SizedBox(
+                height: height * 0.01,
+              ),
+              const TextDataWidget(text: 'Account Status'),
+              InkWell(
+                onTap: () {
+                  FlushBarUtils.flushBar(
+                      "Can't Edit This Field", context, "Information");
+                },
+                child: TextFieldWidget(
+                  controller: statusController,
+                  hintText: 'Account Status',
+                  prefixIcon: Icons.person,
+                  enable: false,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(height * 0.034),
+                      borderSide: BorderSide(color: AppColors.white)),
+                ),
               ),
               SizedBox(
                 height: height * 0.05,
