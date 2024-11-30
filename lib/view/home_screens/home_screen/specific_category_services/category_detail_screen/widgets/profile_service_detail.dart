@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/utils/flushbar.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/category_detail.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/specific_service_detail.dart';
 import 'package:map_launcher/map_launcher.dart';
 
-class ProfileCategoryDetail extends StatefulWidget {
+class ProfileServiceDetail extends StatefulWidget {
   final Map profile;
   final Map serviceData;
   bool auth;
-  ProfileCategoryDetail(
+  ProfileServiceDetail(
       {super.key,
       required this.profile,
       this.auth = false,
       required this.serviceData});
 
   @override
-  State<ProfileCategoryDetail> createState() => _ProfileCategoryDetailState();
+  State<ProfileServiceDetail> createState() => _ProfileServiceDetailState();
 }
 
-class _ProfileCategoryDetailState extends State<ProfileCategoryDetail> {
+class _ProfileServiceDetailState extends State<ProfileServiceDetail> {
   openMapSheet(context, longitude, latitude, location) async {
     try {
       final availableMaps = await MapLauncher.installedMaps;

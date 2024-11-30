@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/empty_screen.dart';
 import 'package:maintenance/view/home_screens/home_screen/home_widgets/category_container.dart';
-import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/category_detail.dart';
+import 'package:maintenance/view/home_screens/home_screen/specific_category_services/category_detail_screen/specific_service_detail.dart';
 
 class SpecificCategoryServices extends StatefulWidget {
   final String id;
@@ -83,10 +83,11 @@ class _SpecificCategoryServicesState extends State<SpecificCategoryServices> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CategoryDetailScreen(
-                                      userData: userInfo,
-                                      serviceData: document.data()
-                                          as Map<dynamic, dynamic>),
+                                  builder: (context) =>
+                                      SpecificServiceDetailScreen(
+                                          userData: userInfo,
+                                          serviceData: document.data()
+                                              as Map<dynamic, dynamic>),
                                 ));
                           },
                         );

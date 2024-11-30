@@ -4,10 +4,9 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:maintenance/res/colors/app_colors.dart';
 import 'package:maintenance/res/common_widgets/popup.dart';
+import 'package:maintenance/view/admin_view/account_screen_admin.dart';
 import 'package:maintenance/view/admin_view/admin_home.dart';
 import 'package:maintenance/view/admin_view/all_users/all_users.dart';
-import 'package:maintenance/view/home_screens/account_screen/account_screen.dart';
-import 'package:maintenance/view/seller_view/home.dart';
 
 // ignore: must_be_immutable
 class MainBottomBarAdmin extends StatefulWidget {
@@ -45,7 +44,7 @@ class _MainBottomBarAdminState extends State<MainBottomBarAdmin> {
   final page = [
     const AdminHome(),
     const AllUsers(),
-    const AccountScreen(),
+    const AccountScreenAdmin(),
   ];
   pageChange(int index) {
     _initialIndex = index;

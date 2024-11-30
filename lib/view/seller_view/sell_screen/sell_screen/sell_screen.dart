@@ -31,7 +31,7 @@ class _AddServiceState extends State<AddService> {
   final categoryController = TextEditingController();
   List categories = [];
   List categoriesIds = [];
-  List sellerType = ['Dealership', 'Private Seller'];
+  List sellerType = ['Dealership Seller', 'Private Seller'];
   String latitude = '';
   String longitude = '';
   bool isLoading = false;
@@ -166,7 +166,7 @@ class _AddServiceState extends State<AddService> {
             canBack: widget.details != null,
             size: MediaQuery.sizeOf(context),
             color1: AppColors.grey,
-            title: 'Create a new ad',
+            title: widget.details != null ? "Edit your ad" : 'Create a new ad',
           ),
         ),
         body: Form(

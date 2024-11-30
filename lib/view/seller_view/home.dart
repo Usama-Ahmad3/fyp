@@ -20,10 +20,6 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  Future<QuerySnapshot> fetchDataFromFirebase() async {
-    return FirebaseFirestore.instance.collection('categories').get();
-  }
-
   Future<List<Map<String, dynamic>>> getServicesByUserId(String userId) async {
     try {
       final categorySnapshot =
@@ -82,7 +78,6 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    fetchDataFromFirebase();
     return RefreshIndicator(
         displacement: 200,
         onRefresh: () async {

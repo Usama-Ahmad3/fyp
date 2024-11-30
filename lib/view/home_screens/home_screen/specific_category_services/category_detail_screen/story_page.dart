@@ -6,7 +6,7 @@ import 'package:story/story.dart';
 class StoryPage extends StatelessWidget {
   final List<dynamic> files;
 
-  const StoryPage({Key? key, required this.files}) : super(key: key);
+  const StoryPage({super.key, required this.files});
 
   @override
   Widget build(BuildContext context) {
