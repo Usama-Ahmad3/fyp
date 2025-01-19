@@ -32,7 +32,7 @@ class _AccountScreenAdminState extends State<AccountScreenAdmin> {
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .doc(FirebaseAuth.instance.currentUser?.uid)
                   .snapshots(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasError) {

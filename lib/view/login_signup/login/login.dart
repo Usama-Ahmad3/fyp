@@ -156,6 +156,9 @@ class _LogInState extends State<LogIn> {
                                   context,
                                   "Policy Voilation");
                               auth.signOut();
+                              setState(() {
+                                loading = false;
+                              });
                               return;
                             }
                             await FlushBarUtils.flushBar(
